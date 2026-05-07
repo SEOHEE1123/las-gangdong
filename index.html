@@ -646,6 +646,8 @@ input[type="checkbox"]:disabled:checked {
       if (checkbox) {
         checkbox.checked = true;
       }
+
+      updateDailyCounts();
     });
 
   } catch (error) {
@@ -953,7 +955,8 @@ applyPastDefaultChecks();
         <th class="date-head ${isSpecialDay ? 'holiday-cell' : ''}">
           <span class="date-num ${specialClass}">${dateInfo.month}/${dateInfo.day}(${dateInfo.weekday})</span>
           ${dateInfo.memo ? `<span class="${memoClass}">${dateInfo.memo}</span>` : ''}
-        </th>
+
+          <div class="daily-count" data-date="${dateInfo.key}">0/6</div>
         </th>
       `;
     }
@@ -1048,6 +1051,27 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
       return checks;
     }
 
+    function updateDailyCounts() {
+  const allDates = [...new Set(
+    [...document.querySelectorAll('input[data-date]')]
+      .map(cb => cb.dataset.date)
+  )];
+
+  allDates.forEach(dateKey => {
+    const checkedCount = document.querySelectorAll(
+      `input[data-date="${dateKey}"]:checked`
+    ).length;
+
+    const countElement = document.querySelector(
+      `.daily-count[data-date="${dateKey}"]`
+    );
+
+    if (countElement) {
+      countElement.innerText = `${checkedCount}/6`;
+    }
+  });
+}
+
     async function saveCheckToSheet(memberIndex, dateKey, checked) {
   const members = getMembers();
 
@@ -1072,6 +1096,8 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
       currentCheckbox.checked = false;
     }
 
+    updateDailyCounts();
+    
     alert('하루 최대 근무 인원은 6명까지입니다.');
     return;
   }
@@ -1083,6 +1109,8 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
       `${API_URL}?action=saveCheck&date=${dateKey}&name=${encodeURIComponent(memberName)}&checked=${checked}`;
 
     await fetch(url);
+
+    updateDailyCounts();
 
   } catch (error) {
     console.error('구글시트 저장 실패', error);
