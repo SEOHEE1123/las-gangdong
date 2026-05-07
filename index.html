@@ -1037,29 +1037,39 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
     async function saveCheckToSheet(memberIndex, dateKey, checked) {
   const members = getMembers();
 
-   if (checked) {
-  const checkedCount = document.querySelectorAll(
-    `input[data-date="${dateKey}"]:checked`
-  ).length;
+  // 현재 날짜 체크된 인원 계산
+  const checkboxes = document.querySelectorAll(
+    `input[data-date="${dateKey}"]`
+  );
 
-  if (checkedCount > 6) {
-    const checkbox = document.querySelector(
+  let checkedCount = 0;
+
+  checkboxes.forEach(cb => {
+    if (cb.checked) checkedCount++;
+  });
+
+  // 6명 초과 방지
+  if (checked && checkedCount > 6) {
+    const currentCheckbox = document.querySelector(
       `input[data-member="${memberIndex}"][data-date="${dateKey}"]`
     );
 
-    if (checkbox) checkbox.checked = false;
+    if (currentCheckbox) {
+      currentCheckbox.checked = false;
+    }
 
     alert('하루 최대 근무 인원은 6명까지입니다.');
     return;
   }
-}
 
   const memberName = members[memberIndex];
 
   try {
-    await fetch(
-      `${API_URL}?action=saveCheck&date=${dateKey}&name=${encodeURIComponent(memberName)}&checked=${checked}`
-    );
+    const url =
+      `${API_URL}?action=saveCheck&date=${dateKey}&name=${encodeURIComponent(memberName)}&checked=${checked}`;
+
+    await fetch(url);
+
   } catch (error) {
     console.error('구글시트 저장 실패', error);
     alert('저장 실패');
