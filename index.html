@@ -892,7 +892,8 @@ input[type="checkbox"]:disabled:checked {
       });
 
       clearResult();
-    }
+applyPastDefaultChecks();
+}
 
     function buildDateHeader(dateInfo, dayIndex) {
       const dayClass = dayIndex === 6 ? 'sunday' : dayIndex === 5 ? 'saturday' : '';
