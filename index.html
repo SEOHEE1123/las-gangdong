@@ -1040,6 +1040,7 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
   data-member="${memberIndex}"
   data-date="${dateInfo.key}"
   ${checked}
+  ${isPast || dateInfo.memo.includes('마트') ? 'disabled' : ''}
   onchange="saveCheckToSheet(${memberIndex}, '${dateInfo.key}', this.checked)"
 >
     </td>
