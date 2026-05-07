@@ -623,6 +623,8 @@ input[type="checkbox"]:disabled:checked {
   buildSchedule();
   applyPastDefaultChecks();
   loadChecksFromSheet();
+
+  setTimeout(updateDailyCounts, 1000);
 }
     async function loadChecksFromSheet() {
   try {
