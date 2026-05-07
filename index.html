@@ -562,13 +562,7 @@ input[type="checkbox"]:disabled:checked {
 
       <div class="toolbar">
         <button onclick="buildSchedule()">근무 체크표 만들기</button>
-        <button class="secondary" onclick="setTargetByWeeks()">주차 기준 목표일 계산</button>
-        <button class="blue" onclick="saveToBrowser()">현재 내용 저장</button>
-        <button class="secondary" onclick="loadFromBrowser()">저장 내용 불러오기</button>
-        <button class="secondary" onclick="window.print()">PDF로 저장/인쇄</button>
-        <button class="danger" onclick="resetAll()">전체 초기화</button>
       </div>
-      <p class="small">이 HTML은 브라우저 저장을 지원합니다. 단, 여러 사람이 실시간 동시 편집하는 기능은 없습니다.</p>
     </section>
 
     <section class="card">
@@ -581,7 +575,7 @@ input[type="checkbox"]:disabled:checked {
       <div class="guide">
         각 주차가 <b>월요일 → 일요일</b> 순서로 표시됩니다. 팀원별로 근무 가능한 날짜를 체크하세요.<br>
         <b>1일 최대 근무 인원은 6명</b>입니다.<br>
-        <b>오늘 이전 날짜</b>와 <b>마트 휴무일</b>은 자동으로 잠금 처리되어 체크를 수정할 수 없습니다.
+        <b>오늘 이전 날짜</b>와 <b>마트 휴무일</b>은 수정할 수 없습니다.
   </div>
       
       <div id="weekContainer"></div>
