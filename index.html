@@ -961,22 +961,23 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
 
   cellDate.setHours(0, 0, 0, 0);
 
-  // 전체 날짜 체크 가능하도록 잠금 해제
-  // 필요하면 아래 isMartClosed 조건만 다시 disabled에 넣으면 됩니다.
-  const isPast = false;
-  const isMartClosed = false;
-  const secondGenLocked = false;
+  // 오늘 이전 날짜는 잠금 처리합니다.
+  // 이미 구글시트에 저장된 체크는 그대로 불러오고, 수정만 막습니다.
+  const isPast = cellDate < today;
+  const isMartClosed = dateInfo.memo && dateInfo.memo.includes('마트');
 
   return `
-    <td class="${memoCellClass}">
+    <td class="${memoCellClass} ${isPast || isMartClosed ? 'locked-cell' : ''}">
       <input
         type="checkbox"
         data-week="${weekIndex}"
         data-member="${memberIndex}"
         data-date="${dateInfo.key}"
         ${checked}
+        ${isPast || isMartClosed ? 'disabled' : ''}
         onchange="saveCheckToSheet(${memberIndex}, '${dateInfo.key}', this.checked)"
       >
+      ${isPast ? '<span class="past-lock">잠김</span>' : ''}
     </td>
   `;
 }
