@@ -325,7 +325,6 @@ input[type="checkbox"]:disabled:checked {
   cursor: not-allowed;
   opacity: 1;
 }
-    }
 
     .locked-cell {
       background: #f3f4f6 !important;
@@ -962,24 +961,22 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
 
   cellDate.setHours(0, 0, 0, 0);
 
-  // 지난 날짜 여부
-  const isPast = cellDate < today;
-  const isMartClosed = dateInfo.memo && dateInfo.memo.includes('마트');
-  const secondMembers = [6, 7, 8];
-  const secondGenLocked = secondMembers.includes(memberIndex) &&
-  cellDate <= new Date(2026, 4, 10);
+  // 전체 날짜 체크 가능하도록 잠금 해제
+  // 필요하면 아래 isMartClosed 조건만 다시 disabled에 넣으면 됩니다.
+  const isPast = false;
+  const isMartClosed = false;
+  const secondGenLocked = false;
 
   return `
     <td class="${memoCellClass}">
       <input
-  type="checkbox"
-  data-week="${weekIndex}"
-  data-member="${memberIndex}"
-  data-date="${dateInfo.key}"
-  ${checked}
-  ${isPast || isMartClosed || secondGenLocked ? 'disabled' : ''}
-  onchange="saveCheckToSheet(${memberIndex}, '${dateInfo.key}', this.checked)"
->
+        type="checkbox"
+        data-week="${weekIndex}"
+        data-member="${memberIndex}"
+        data-date="${dateInfo.key}"
+        ${checked}
+        onchange="saveCheckToSheet(${memberIndex}, '${dateInfo.key}', this.checked)"
+      >
     </td>
   `;
 }
@@ -1015,6 +1012,12 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
     }
   });
 }
+
+    function clearResult() {
+      // 기존 코드에서 호출만 있고 함수가 없어 오류가 나던 부분 방지
+      updateDailyCounts();
+    }
+
 
     async function saveCheckToSheet(memberIndex, dateKey, checked) {
   const members = getMembers();
@@ -1062,24 +1065,32 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
   }
 }
 
+    async function setCheckboxesAndSave(selector, checked) {
+      const boxes = Array.from(document.querySelectorAll(selector))
+        .filter(cb => !cb.disabled);
+
+      for (const cb of boxes) {
+        cb.checked = checked;
+        await saveCheckToSheet(Number(cb.dataset.member), cb.dataset.date, checked);
+      }
+
+      updateDailyCounts();
+    }
+
     function checkWeek(weekIndex) {
-      document.querySelectorAll(`input[data-week="${weekIndex}"]`).forEach(cb => { if (!cb.disabled) cb.checked = true; });
-      clearResult();
+      setCheckboxesAndSave(`input[data-week="${weekIndex}"]`, true);
     }
 
     function clearWeek(weekIndex) {
-      document.querySelectorAll(`input[data-week="${weekIndex}"]`).forEach(cb => { if (!cb.disabled) cb.checked = false; });
-      clearResult();
+      setCheckboxesAndSave(`input[data-week="${weekIndex}"]`, false);
     }
 
     function checkAll() {
-      document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => { if (!cb.disabled) cb.checked = true; });
-      clearResult();
+      setCheckboxesAndSave('input[type="checkbox"][data-date]', true);
     }
 
     function clearChecks() {
-      document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => { if (!cb.disabled) cb.checked = false; });
-      clearResult();
+      setCheckboxesAndSave('input[type="checkbox"][data-date]', false);
     }
 
     init();
