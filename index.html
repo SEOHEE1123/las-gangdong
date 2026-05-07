@@ -613,13 +613,43 @@ input[type="checkbox"]:disabled:checked {
     let calendarWeeks = [];
 
     function init() {
-      const now = new Date();
-      document.getElementById('yearInput').value = now.getFullYear();
-      document.getElementById('monthInput').value = now.getMonth() + 1;
-      buildNameInputs();
-      buildSchedule();
-    }
+  const now = new Date();
+  document.getElementById('yearInput').value = now.getFullYear();
+  document.getElementById('monthInput').value = now.getMonth() + 1;
 
+  buildNameInputs();
+  buildSchedule();
+  applyPastDefaultChecks();
+}
+
+    function applyPastDefaultChecks() {
+  const defaultChecks = {
+    "2026-05-01": ["박서윤(1기)", "백수현(1기)", "정현창(1기)"],
+    "2026-05-02": ["백수현(1기)", "박서윤(1기)"],
+    "2026-05-04": ["주하은(1기)", "장서희(1기)"],
+    "2026-05-05": ["백수현(1기)", "김성민(1기)"],
+    "2026-05-06": ["백수현(1기)", "김성민(1기)"]
+  };
+
+  const members = getMembers();
+
+  Object.keys(defaultChecks).forEach(dateKey => {
+    defaultChecks[dateKey].forEach(memberName => {
+      const memberIndex = members.indexOf(memberName);
+
+      if (memberIndex === -1) return;
+
+      const checkbox = document.querySelector(
+        `input[data-member="${memberIndex}"][data-date="${dateKey}"]`
+      );
+
+      if (checkbox) {
+        checkbox.checked = true;
+      }
+    });
+  });
+}
+    
     function buildNameInputs() {
       const fixedMembers = [
         '장서희(1기)',
