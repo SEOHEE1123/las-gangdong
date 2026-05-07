@@ -1033,7 +1033,7 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
   data-member="${memberIndex}"
   data-date="${dateInfo.key}"
   ${checked}
-  ${isPast || isMartClosed || secondGenLocked ? 'disabled' : ''}
+  ${isMartClosed || secondGenLocked ? 'disabled' : ''}
   onchange="saveCheckToSheet(${memberIndex}, '${dateInfo.key}', this.checked)"
 >
     </td>
