@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>라스브러리 강동팀 근무표</title>
   <style>
+
+    input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 1;
+}
+    
     * { box-sizing: border-box; }
 
     :root {
@@ -309,9 +315,10 @@
       accent-color: var(--green);
     }
 
-    input[type="checkbox"]:disabled {
-      cursor: not-allowed;
-      opacity: 0.45;
+   input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 1;
+}
     }
 
     .locked-cell {
@@ -900,20 +907,52 @@
       });
       return normalized;
     }
+function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, keepChecks) {
+  if (!dateInfo) {
+    return `<td class="empty-date"></td>`;
+  }
 
-    function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, keepChecks) {
-      if (!dateInfo) return `<td class="empty-date"></td>`;
-      const memoCellClass = dateInfo.memo.includes('마트') ? 'mart-cell' : dateInfo.memo ? 'holiday-cell' : '';
-      const locked = isPastDate(dateInfo);
-      const key = `${memberIndex}-${dateInfo.key}`;
-      const savedChecks = getSavedChecks();
-      const isChecked = !!oldChecks[key] || !!savedChecks[key];
-      const checked = isChecked ? 'checked' : '';
-      const disabled = locked ? 'disabled' : '';
-      const lockText = locked ? '<span class="past-lock">잠금</span>' : '';
-      return `<td class="${memoCellClass} ${locked ? 'locked-cell' : ''}"><input type="checkbox" data-week="${weekIndex}" data-member="${memberIndex}" data-date="${dateInfo.key}" ${checked} ${disabled}>${lockText}</td>`;
-    }
+  const memoCellClass =
+    dateInfo.memo.includes('마트')
+      ? 'mart-cell'
+      : dateInfo.memo
+      ? 'holiday-cell'
+      : '';
 
+  const key = `${memberIndex}-${dateInfo.key}`;
+
+  const checked =
+    keepChecks && oldChecks[key]
+      ? 'checked'
+      : '';
+
+  // 오늘 날짜 기준
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // 셀 날짜
+  const cellDate = new Date(
+    dateInfo.year,
+    dateInfo.month - 1,
+    dateInfo.day
+  );
+
+  // 지난 날짜 여부
+  const isPast = cellDate < today;
+
+  return `
+    <td class="${memoCellClass}">
+      <input
+        type="checkbox"
+        data-week="${weekIndex}"
+        data-member="${memberIndex}"
+        data-date="${dateInfo.key}"
+        ${checked}
+        ${isPast ? 'disabled' : ''}
+      >
+    </td>
+  `;
+}
     function refreshMemberNames() {
       buildSchedule(true);
     }
