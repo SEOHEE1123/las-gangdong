@@ -1297,10 +1297,14 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
     }
 
     function clearResult() {
-      document.getElementById('messageBox').innerHTML = '';
-      document.getElementById('resultBox').innerHTML = '';
-      document.getElementById('shareText').value = '';
-    }
+  const messageBox = document.getElementById('messageBox');
+  const resultBox = document.getElementById('resultBox');
+  const shareText = document.getElementById('shareText');
+
+  if (messageBox) messageBox.innerHTML = '';
+  if (resultBox) resultBox.innerHTML = '';
+  if (shareText) shareText.value = '';
+}
 
     function setTargetByWeeks() {
       monthDates = buildMonthDates();
