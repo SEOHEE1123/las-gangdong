@@ -619,21 +619,21 @@ input[type="checkbox"]:disabled:checked {
     }
 
     data.checks.forEach(check => {
-      if (!check.checked) return;
+  if (!(check.checked === true || check.checked === 'TRUE' || check.checked === 'true')) return;
 
-      const members = getMembers();
-      const memberIndex = members.indexOf(check.name);
+  const members = getMembers();
+  const memberIndex = members.indexOf(check.name);
 
-      if (memberIndex === -1) return;
+  if (memberIndex === -1) return;
 
-      const checkbox = document.querySelector(
-        `input[data-member="${memberIndex}"][data-date="${check.date}"]`
-      );
+  const checkbox = document.querySelector(
+    `input[data-member="${memberIndex}"][data-date="${check.date}"]`
+  );
 
-      if (checkbox) {
-        checkbox.checked = true;
-      }
-    });
+  if (checkbox) {
+    checkbox.checked = true;
+  }
+});
 
     updateDailyCounts();
 
