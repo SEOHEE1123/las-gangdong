@@ -622,6 +622,35 @@ input[type="checkbox"]:disabled:checked {
   buildNameInputs();
   buildSchedule();
   applyPastDefaultChecks();
+  loadChecksFromSheet();
+}
+    async function loadChecksFromSheet() {
+  try {
+    const response = await fetch(`${API_URL}?action=getData`);
+    const data = await response.json();
+
+    if (!data.checks) return;
+
+    data.checks.forEach(check => {
+      if (!check.checked) return;
+
+      const members = getMembers();
+      const memberIndex = members.indexOf(check.name);
+
+      if (memberIndex === -1) return;
+
+      const checkbox = document.querySelector(
+        `input[data-member="${memberIndex}"][data-date="${check.date}"]`
+      );
+
+      if (checkbox) {
+        checkbox.checked = true;
+      }
+    });
+
+  } catch (error) {
+    console.error('체크 불러오기 실패', error);
+  }
 }
 
     function applyPastDefaultChecks() {
