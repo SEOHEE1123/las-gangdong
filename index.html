@@ -580,32 +580,19 @@ input[type="checkbox"]:disabled:checked {
       <h2>3. 주차별 근무 가능 날짜 체크</h2>
       <div class="guide">
         각 주차가 <b>월요일 → 일요일</b> 순서로 표시됩니다. 팀원별로 근무 가능한 날짜를 체크하세요.<br>
-        <b>오늘 이전 날짜</b>는 저장된 체크 상태는 그대로 보이지만, 수정할 수 없도록 자동 잠금 처리됩니다.<br>
-        <b>오늘 이전 날짜</b>는 자동으로 잠금 처리되어 체크를 수정할 수 없습니다.
-      </div>
+        <b>1일 최대 근무 인원은 6명</b>입니다.<br>
+        <b>오늘 이전 날짜</b>와 <b>마트 휴무일</b>은 자동으로 잠금 처리되어 체크를 수정할 수 없습니다.
+  </div>
+      
       <div id="weekContainer"></div>
       <div class="toolbar no-print">
-        <button onclick="autoAssign()">체크 기준 자동 배정</button>
         <button class="secondary" onclick="checkAll()">전체 체크</button>
         <button class="secondary" onclick="clearChecks()">체크 지우기</button>
       </div>
     </section>
 
-    <section class="card">
-      <h2>4. 자동 배정 결과</h2>
-      <div id="messageBox"></div>
-      <div id="resultBox"></div>
-    </section>
-
-    <section class="card no-print">
-      <h2>5. 조원 공유용 메시지</h2>
-      <textarea id="shareText" placeholder="자동 배정 후 공유용 메시지가 생성됩니다."></textarea>
-      <div class="toolbar">
-        <button onclick="copyShareText()">공유용 메시지 복사</button>
-      </div>
-    </section>
   </div>
-  
+
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbx75l3lq-fAUBCFbVDbYfzk0-VsxEx3xpe1WGuFSqmZKx1cFS_TUZ45RnQsN8RLkBnz/exec';
     
