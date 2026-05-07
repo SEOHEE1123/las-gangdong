@@ -574,7 +574,7 @@ input[type="checkbox"]:disabled:checked {
       <div class="guide">
         각 주차가 <b>월요일 → 일요일</b> 순서로 표시됩니다. 팀원별로 근무 가능한 날짜를 체크하세요.<br>
         <b>1일 최대 근무 인원은 6명</b>입니다.<br>
-        <b>오늘 이전 날짜</b>와 <b>마트 휴무일</b>은 수정할 수 없습니다.
+        <b>오늘 이전 날짜</b>와 <b>마트 휴무일</b>은 자동으로 잠금 처리되어 체크를 수정할 수 없습니다.
   </div>
       
       <div id="weekContainer"></div>
@@ -601,6 +601,7 @@ input[type="checkbox"]:disabled:checked {
 
   buildNameInputs();
   buildSchedule();
+  applyPastDefaultChecks();
   loadChecksFromSheet();
 
   setTimeout(updateDailyCounts, 1000);
@@ -617,21 +618,21 @@ input[type="checkbox"]:disabled:checked {
     }
 
     data.checks.forEach(check => {
-  if (!(check.checked === true || check.checked === 'TRUE' || check.checked === 'true')) return;
+      if (!check.checked) return;
 
-  const members = getMembers();
-  const memberIndex = members.indexOf(check.name);
+      const members = getMembers();
+      const memberIndex = members.indexOf(check.name);
 
-  if (memberIndex === -1) return;
+      if (memberIndex === -1) return;
 
-  const checkbox = document.querySelector(
-    `input[data-member="${memberIndex}"][data-date="${check.date}"]`
-  );
+      const checkbox = document.querySelector(
+        `input[data-member="${memberIndex}"][data-date="${check.date}"]`
+      );
 
-  if (checkbox) {
-    checkbox.checked = true;
-  }
-});
+      if (checkbox) {
+        checkbox.checked = true;
+      }
+    });
 
     updateDailyCounts();
 
@@ -641,6 +642,35 @@ input[type="checkbox"]:disabled:checked {
   }
 } 
 
+    function applyPastDefaultChecks() {
+  const defaultChecks = {
+    "2026-05-01": ["박서윤(1기)", "백수현(1기)", "정현창(1기)"],
+    "2026-05-02": ["백수현(1기)", "박서윤(1기)"],
+    "2026-05-03": [],
+    "2026-05-04": ["주하은(1기)", "장서희(1기)"],
+    "2026-05-05": ["백수현(1기)", "김성민(1기)"],
+    "2026-05-06": ["백수현(1기)", "김성민(1기)"],
+    "2026-05-07": ["주하은(1기)", "장서희(1기)"]
+  };
+
+  const members = getMembers();
+
+  Object.keys(defaultChecks).forEach(dateKey => {
+    defaultChecks[dateKey].forEach(memberName => {
+      const memberIndex = members.indexOf(memberName);
+
+      if (memberIndex === -1) return;
+
+      const checkbox = document.querySelector(
+        `input[data-member="${memberIndex}"][data-date="${dateKey}"]`
+      );
+
+      if (checkbox) {
+        checkbox.checked = true;
+      }
+    });
+  });
+}
     
     function buildNameInputs() {
   const fixedMembers = [
@@ -869,10 +899,6 @@ input[type="checkbox"]:disabled:checked {
               <div class="week-title">${weekIndex + 1}주차</div>
               <div class="week-range">${start.month}/${start.day}(${start.weekday}) ~ ${end.month}/${end.day}(${end.weekday})</div>
             </div>
-            <div class="toolbar no-print" style="margin:0;">
-              <button class="secondary" onclick="checkWeek(${weekIndex})">이 주차 전체 체크</button>
-              <button class="secondary" onclick="clearWeek(${weekIndex})">이 주차 체크 해제</button>
-            </div>
           </div>
           <div class="week-table-wrap">
             <table>
@@ -897,9 +923,7 @@ input[type="checkbox"]:disabled:checked {
       });
 
       clearResult();
-      setTimeout(() => {
-  loadChecksFromSheet();
-}, 100);
+applyPastDefaultChecks();
 }
 
     function buildDateHeader(dateInfo, dayIndex) {
@@ -961,23 +985,21 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
 
   cellDate.setHours(0, 0, 0, 0);
 
-  // 오늘 이전 날짜는 잠금 처리합니다.
-  // 이미 구글시트에 저장된 체크는 그대로 불러오고, 수정만 막습니다.
+  // 지난 날짜 여부
   const isPast = cellDate < today;
   const isMartClosed = dateInfo.memo && dateInfo.memo.includes('마트');
 
   return `
-    <td class="${memoCellClass} ${isPast || isMartClosed ? 'locked-cell' : ''}">
+    <td class="${memoCellClass}">
       <input
-        type="checkbox"
-        data-week="${weekIndex}"
-        data-member="${memberIndex}"
-        data-date="${dateInfo.key}"
-        ${checked}
-        ${isPast || isMartClosed ? 'disabled' : ''}
-        onchange="saveCheckToSheet(${memberIndex}, '${dateInfo.key}', this.checked)"
-      >
-      ${isPast ? '<span class="past-lock">잠김</span>' : ''}
+  type="checkbox"
+  data-week="${weekIndex}"
+  data-member="${memberIndex}"
+  data-date="${dateInfo.key}"
+  ${checked}
+  ${isPast || isMartClosed ? 'disabled' : ''}
+  onchange="saveCheckToSheet(${memberIndex}, '${dateInfo.key}', this.checked)"
+>
     </td>
   `;
 }
@@ -1013,12 +1035,6 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
     }
   });
 }
-
-    function clearResult() {
-      // 기존 코드에서 호출만 있고 함수가 없어 오류가 나던 부분 방지
-      updateDailyCounts();
-    }
-
 
     async function saveCheckToSheet(memberIndex, dateKey, checked) {
   const members = getMembers();
@@ -1066,33 +1082,185 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
   }
 }
 
-    async function setCheckboxesAndSave(selector, checked) {
-      const boxes = Array.from(document.querySelectorAll(selector))
-        .filter(cb => !cb.disabled);
-
-      for (const cb of boxes) {
-        cb.checked = checked;
-        await saveCheckToSheet(Number(cb.dataset.member), cb.dataset.date, checked);
-      }
-
-      updateDailyCounts();
-    }
-
-    function checkWeek(weekIndex) {
-      setCheckboxesAndSave(`input[data-week="${weekIndex}"]`, true);
-    }
-
-    function clearWeek(weekIndex) {
-      setCheckboxesAndSave(`input[data-week="${weekIndex}"]`, false);
-    }
 
     function checkAll() {
-      setCheckboxesAndSave('input[type="checkbox"][data-date]', true);
+      document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => { if (!cb.disabled) cb.checked = true; });
+      clearResult();
     }
 
     function clearChecks() {
-      setCheckboxesAndSave('input[type="checkbox"][data-date]', false);
+      document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => { if (!cb.disabled) cb.checked = false; });
+      clearResult();
     }
+
+    function getAvailability() {
+      const members = getMembers();
+      return members.map((name, memberIndex) => {
+        const available = monthDates.filter(dateInfo => {
+          const cb = document.querySelector(`input[data-member="${memberIndex}"][data-date="${dateInfo.key}"]`);
+          return cb && cb.checked;
+        });
+        const typeInfo = getMemberTypes()[memberIndex];
+        return { name, memberIndex, available, assigned: [], ...typeInfo, targetCount: typeInfo.weeklyCount * getWeeksCount() };
+      });
+    }
+
+    function autoAssign() {
+      const defaultTargetCount = Number(document.getElementById('targetCountInput').value) || 16;
+      const defaultWeeklyLimit = Number(document.getElementById('weeklyCountInput').value) || 4;
+      const members = getAvailability();
+      const errors = [];
+
+      members.forEach(member => {
+        if (member.available.length < member.targetCount) {
+          errors.push(`${member.name}: 가능한 날짜 ${member.available.length}개 / 목표 ${member.targetCount}개 (${member.weeklyCount}회 근무형)`);
+        }
+      });
+
+      if (errors.length) {
+        showMessage('warning', '목표 근무일을 채우기 어려운 팀원이 있습니다.\n' + errors.join('\n'));
+        return;
+      }
+
+      const dateCountMap = {};
+      monthDates.forEach(d => dateCountMap[d.key] = 0);
+
+      members
+        .sort((a, b) => a.available.length - b.available.length)
+        .forEach(member => {
+          const weekCount = {};
+          const sortedDates = member.available
+            .map(d => ({ ...d, count: dateCountMap[d.key], week: getWeekIndexByKey(d.key) }))
+            .sort((a, b) => a.week - b.week || a.count - b.count || a.day - b.day);
+
+          for (const dateInfo of sortedDates) {
+            if (member.assigned.length >= member.targetCount) break;
+            weekCount[dateInfo.week] = weekCount[dateInfo.week] || 0;
+            if (weekCount[dateInfo.week] >= member.weeklyCount) continue;
+            member.assigned.push(dateInfo);
+            weekCount[dateInfo.week]++;
+            dateCountMap[dateInfo.key]++;
+          }
+
+          if (member.assigned.length < targetCount) {
+            for (const dateInfo of sortedDates) {
+              if (member.assigned.length >= member.targetCount) break;
+              if (member.assigned.some(d => d.key === dateInfo.key)) continue;
+              member.assigned.push(dateInfo);
+              dateCountMap[dateInfo.key]++;
+            }
+          }
+
+          member.assigned.sort((a, b) => a.key.localeCompare(b.key));
+        });
+
+      renderResult(members, defaultTargetCount);
+      showMessage('success', '자동 배정이 완료되었습니다. 아래 결과를 확인한 뒤 조원들에게 공유하세요.');
+    }
+
+    function getWeekIndexByKey(key) {
+      for (let i = 0; i < calendarWeeks.length; i++) {
+        if (calendarWeeks[i].some(d => d && d.key === key)) return i;
+      }
+      return 0;
+    }
+
+    function renderResult(members, targetCount) {
+      const resultBox = document.getElementById('resultBox');
+      const year = Number(document.getElementById('yearInput').value);
+      const month = Number(document.getElementById('monthInput').value);
+      const workTime = document.getElementById('workTimeInput').value || '10:00~20:00';
+      const dateMap = {};
+      monthDates.forEach(d => dateMap[d.key] = []);
+
+      members.forEach(member => {
+        member.assigned.forEach(dateInfo => dateMap[dateInfo.key].push(member.name));
+      });
+
+      const firstWeekday = (new Date(year, month - 1, 1).getDay() + 6) % 7;
+      const lastDay = new Date(year, month, 0).getDate();
+      const calendarCells = [];
+      for (let i = 0; i < firstWeekday; i++) calendarCells.push(null);
+      monthDates.forEach(d => calendarCells.push(d));
+      while (calendarCells.length % 7 !== 0) calendarCells.push(null);
+
+      const calendarHtml = `
+        <div class="calendar">
+          ${weekdays.map((w, i) => `<div class="calendar-head ${i === 6 ? 'sunday' : i === 5 ? 'saturday' : ''}">${w}</div>`).join('')}
+          ${calendarCells.map(dateInfo => {
+            if (!dateInfo) return '<div class="date-box empty"></div>';
+            const memoClass = dateInfo.memo.includes('마트') ? 'mart-note' : dateInfo.memo ? 'holiday-note' : '';
+            return `
+              <div class="date-box">
+                <div class="date-title">${dateInfo.month}/${dateInfo.day} (${dateInfo.weekday}) ${dateInfo.memo ? `<span class="${memoClass}">${dateInfo.memo}</span>` : ''}</div>
+                ${dateMap[dateInfo.key].length ? dateMap[dateInfo.key].map(name => `<span class="chip">${name}</span>`).join('') : '<span class="small">배정 없음</span>'}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+
+      const summaryHtml = `
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>팀원명</th>
+              <th>근무 유형</th>
+              <th>근무 시간</th>
+              <th>근무 날짜</th>
+              <th>근무 횟수</th>
+              <th>상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${members.sort((a, b) => a.memberIndex - b.memberIndex).map(member => {
+              const count = member.assigned.length;
+              const memberTarget = member.targetCount || targetCount;
+              const status = count === memberTarget ? '정상' : count < memberTarget ? '부족' : '초과';
+              return `
+                <tr>
+                  <td>${member.name}</td>
+                  <td>주 ${member.weeklyCount}회</td>
+                  <td>${member.workTime}</td>
+                  <td>${member.assigned.map(d => `${d.month}/${d.day}(${d.weekday})`).join(', ')}</td>
+                  <td>${count}회 / 목표 ${memberTarget}회</td>
+                  <td>${status}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+
+      resultBox.innerHTML = `<h3>${year}년 ${month}월 달력형 근무표</h3>${calendarHtml}<h3>팀원별 근무 요약</h3>${summaryHtml}`;
+      buildShareText(members, year, month, workTime, targetCount);
+    }
+
+    function buildShareText(members, year, month, workTime, targetCount) {
+      let text = `강동팀 ${year}년 ${month}월 근무 계획표 공유드립니다.
+`;
+      text += `근무유형: 주 4회 10:00~20:00 / 주 5회 10:00~18:00
+
+`;
+
+      members.sort((a, b) => a.memberIndex - b.memberIndex).forEach(member => {
+        text += `${member.name} [주 ${member.weeklyCount}회 / ${member.workTime}]: ${member.assigned.map(d => `${d.month}/${d.day}(${d.weekday})`).join(', ') || '배정 없음'} / 총 ${member.assigned.length}회`;
+        if (member.assigned.length !== member.targetCount) text += ` ※ 목표 ${member.targetCount}회와 다름`;
+        text += '\n';
+      });
+
+      text += '\n확인 후 수정이 필요한 부분 있으면 말씀 부탁드립니다.';
+      document.getElementById('shareText').value = text;
+    }
+
+    function showMessage(type, text) {
+      document.getElementById('messageBox').innerHTML = `<div class="message ${type}">${text}</div>`;
+    }
+
+    function clearResult() {
+      updateDailyCounts();
+    }
+
 
     init();
   </script>
