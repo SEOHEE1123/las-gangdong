@@ -626,12 +626,16 @@ input[type="checkbox"]:disabled:checked {
 
   setTimeout(updateDailyCounts, 1000);
 }
-    async function loadChecksFromSheet() {
+    
+  async function loadChecksFromSheet() {
   try {
     const response = await fetch(`${API_URL}?action=getData`);
     const data = await response.json();
 
-    if (!data.checks) return;
+    if (!data.checks) {
+      updateDailyCounts();
+      return;
+    }
 
     data.checks.forEach(check => {
       if (!check.checked) return;
@@ -648,14 +652,15 @@ input[type="checkbox"]:disabled:checked {
       if (checkbox) {
         checkbox.checked = true;
       }
-
-      updateDailyCounts();
     });
+
+    updateDailyCounts();
 
   } catch (error) {
     console.error('체크 불러오기 실패', error);
+    updateDailyCounts();
   }
-}
+} 
 
     function applyPastDefaultChecks() {
   const defaultChecks = {
