@@ -567,6 +567,7 @@
       <h2>3. 주차별 근무 가능 날짜 체크</h2>
       <div class="guide">
         각 주차가 <b>월요일 → 일요일</b> 순서로 표시됩니다. 팀원별로 근무 가능한 날짜를 체크하세요.<br>
+        <b>오늘 이전 날짜</b>는 저장된 체크 상태는 그대로 보이지만, 수정할 수 없도록 자동 잠금 처리됩니다.<br>
         <b>오늘 이전 날짜</b>는 자동으로 잠금 처리되어 체크를 수정할 수 없습니다.
       </div>
       <div id="weekContainer"></div>
@@ -876,14 +877,40 @@
       return targetDate < today;
     }
 
+    function getSavedChecks() {
+      try {
+        const saved = localStorage.getItem('gangdongShiftPlan');
+        if (!saved) return {};
+        const state = JSON.parse(saved);
+        return normalizeChecks(state.checks || {});
+      } catch (error) {
+        return {};
+      }
+    }
+
+    function normalizeChecks(checks) {
+      const normalized = {};
+      Object.keys(checks || {}).forEach(key => {
+        const [memberIndex, ...dateParts] = key.split('-');
+        const idx = Number(memberIndex);
+        const dateKey = dateParts.join('-');
+        if (!dateKey) return;
+        if (idx < 6) normalized[`${idx}-${dateKey}`] = checks[key];
+        if (idx > 6 && idx < 10) normalized[`${idx - 1}-${dateKey}`] = checks[key];
+      });
+      return normalized;
+    }
+
     function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, keepChecks) {
       if (!dateInfo) return `<td class="empty-date"></td>`;
       const memoCellClass = dateInfo.memo.includes('마트') ? 'mart-cell' : dateInfo.memo ? 'holiday-cell' : '';
       const locked = isPastDate(dateInfo);
       const key = `${memberIndex}-${dateInfo.key}`;
-      const checked = keepChecks && oldChecks[key] ? 'checked' : '';
+      const savedChecks = getSavedChecks();
+      const isChecked = !!oldChecks[key] || !!savedChecks[key];
+      const checked = isChecked ? 'checked' : '';
       const disabled = locked ? 'disabled' : '';
-      const lockText = locked ? '<span class="past-lock">지난 날짜</span>' : '';
+      const lockText = locked ? '<span class="past-lock">잠금</span>' : '';
       return `<td class="${memoCellClass} ${locked ? 'locked-cell' : ''}"><input type="checkbox" data-week="${weekIndex}" data-member="${memberIndex}" data-date="${dateInfo.key}" ${checked} ${disabled}>${lockText}</td>`;
     }
 
@@ -1121,22 +1148,14 @@
       if (Array.isArray(state.members)) {
         state.members = state.members.filter(name => name !== '권아연(2기)').slice(0, memberCount);
       }
-      if (state.checks) {
-        const newChecks = {};
-        Object.keys(state.checks).forEach(key => {
-          const [memberIndex, ...dateParts] = key.split('-');
-          const idx = Number(memberIndex);
-          if (idx < 6) newChecks[key] = state.checks[key];
-          if (idx > 6 && idx < 10) newChecks[`${idx - 1}-${dateParts.join('-')}`] = state.checks[key];
-        });
-        state.checks = newChecks;
-      }
+      state.checks = normalizeChecks(state.checks || {});
       document.getElementById('yearInput').value = state.year;
       document.getElementById('monthInput').value = state.month;
       document.getElementById('weeklyCountInput').value = state.weekly;
       document.getElementById('targetCountInput').value = state.target;
       document.getElementById('memoInput').value = state.memo;
       document.getElementById('workTimeInput').value = state.workTime;
+      localStorage.setItem('gangdongShiftPlan', JSON.stringify(state));
       state.members.forEach((name, i) => {
         const input = document.getElementById(`member-${i}`);
         if (input) input.value = name;
