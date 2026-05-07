@@ -1037,22 +1037,22 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
     async function saveCheckToSheet(memberIndex, dateKey, checked) {
   const members = getMembers();
 
-       if (checked) {
-    const checkedCount = document.querySelectorAll(
-      `input[data-date="${dateKey}"]:checked`
-    ).length;
+   if (checked) {
+  const checkedCount = document.querySelectorAll(
+    `input[data-date="${dateKey}"]:checked`
+  ).length;
 
-    if (checkedCount > 6) {
-      const checkbox = document.querySelector(
-        `input[data-member="${memberIndex}"][data-date="${dateKey}"]`
-      );
+  if (checkedCount > 6) {
+    const checkbox = document.querySelector(
+      `input[data-member="${memberIndex}"][data-date="${dateKey}"]`
+    );
 
-      if (checkbox) checkbox.checked = false;
+    if (checkbox) checkbox.checked = false;
 
-      alert('하루 최대 근무 인원은 6명까지입니다.');
-      return;
-    }
+    alert('하루 최대 근무 인원은 6명까지입니다.');
+    return;
   }
+}
 
   const memberName = members[memberIndex];
 
