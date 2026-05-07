@@ -682,34 +682,48 @@ input[type="checkbox"]:disabled:checked {
 }
     
     function buildNameInputs() {
-      const fixedMembers = [
-        '장서희(1기)',
-        '김성민(1기)',
-        '백수현(1기)',
-        '정현창(1기)',
-        '주하은(1기)',
-        '박서윤(1기)',
-        '양창희(2기)',
-        '권은서(2기)',
-        '김정우(2기)'
-      ];
+  const fixedMembers = [
+    '장서희(1기)',
+    '김성민(1기)',
+    '백수현(1기)',
+    '정현창(1기)',
+    '주하은(1기)',
+    '박서윤(1기)',
+    '양창희(2기)',
+    '권은서(2기)',
+    '김정우(2기)'
+  ];
 
-      const grid = document.getElementById('nameGrid');
-      grid.innerHTML = '';
-      for (let i = 0; i < memberCount; i++) {
-        const box = document.createElement('div');
-        box.innerHTML = `
-          <label for="member-${i}">팀원 ${i + 1}</label>
-          <input type="text" id="member-${i}" value="${fixedMembers[i]}" readonly />
-          <select id="type-${i}" class="member-type" onchange="refreshMemberNames()">
-            <option value="4">주 4회 · 10:00~20:00</option>
-            <option value="5">주 5회 · 10:00~18:00</option>
-          </select>
-        `;
-        grid.appendChild(box);
-      }
-    }
+  const grid = document.getElementById('nameGrid');
+  grid.innerHTML = '';
 
+  for (let i = 0; i < memberCount; i++) {
+    const box = document.createElement('div');
+
+    box.innerHTML = `
+      <label for="member-${i}">팀원 ${i + 1}</label>
+
+      <input
+        type="text"
+        id="member-${i}"
+        value="${fixedMembers[i]}"
+        readonly
+      />
+
+      <select
+        id="type-${i}"
+        class="member-type"
+        onchange="refreshMemberNames()"
+      >
+        <option value="4">주 4회 · 10:00~20:00</option>
+        <option value="5">주 5회 · 10:00~18:00</option>
+      </select>
+    `;
+
+    grid.appendChild(box);
+  }
+}
+    
     function getMembers() {
       return Array.from({ length: memberCount }, (_, i) => {
         const input = document.getElementById(`member-${i}`);
