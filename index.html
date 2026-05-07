@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>라스브러리 강동팀 근무표</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --bg: #f3f8ff;
+      --paper: #ffffff;
+      --paper-2: #f4f9ff;
+      --line: #d7e5f4;
+      --text: #243447;
+      --sub: #6c8096;
+      --green: #5a9fe8;
+      --green-soft: #eaf4ff;
+      --brown: #7da8d8;
+      --red: #f07f8e;
+      --red-soft: #fff1f4;
+      --blue: #5a9fe8;
+      --blue-soft: #eef7ff;
+      --yellow: #fff7d8;
+      --las-cream: #f5faff;
+      --las-beige: #e9f3ff;
+      --las-deep: #3d7edb;
+      --shadow: 0 18px 40px rgba(90, 159, 232, 0.12);
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, 'Noto Sans KR', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.7) 0%, transparent 28%),
+        linear-gradient(180deg, #f8fbff 0%, #eef6ff 100%);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 34px 20px 70px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #eaf4ff 100%);
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      padding: 30px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      letter-spacing: -0.04em;
+      color: var(--las-deep);
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--sub);
+      font-size: 15px;
+    }
+
+    .card {
+      background: rgba(255, 253, 249, 0.96);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      margin: 0 0 14px;
+      font-size: 21px;
+      letter-spacing: -0.03em;
+      color: #4a382d;
+    }
+
+    .guide {
+      background: linear-gradient(135deg, #f6fbff, #eaf3ff);
+      border-left: 5px solid var(--green);
+      padding: 14px 16px;
+      border-radius: 16px;
+      color: #4f6782;
+      margin-bottom: 18px;
+      font-size: 14px;
+    }
+
+    .settings-grid, .name-grid {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .settings-grid { grid-template-columns: repeat(4, minmax(160px, 1fr)); }
+    .name-grid { grid-template-columns: repeat(5, 1fr); }
+    .member-type {
+      margin-top: 6px;
+      font-size: 13px;
+    }
+    .type-badge {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 12px;
+      font-weight: 900;
+      margin-left: 4px;
+      background: var(--green-soft);
+      color: #36633f;
+    }
+    .type-badge.five {
+      background: var(--blue-soft);
+      color: #304f78;
+    }
+
+    label {
+      display: block;
+      font-weight: 800;
+      color: #4a382d;
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+
+    input[type="text"], input[type="number"], select, textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #d9c8b5;
+      border-radius: 12px;
+      font-size: 14px;
+      background: #fffdfa;
+      color: var(--text);
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(79, 124, 89, 0.12);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 11px 18px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 14px;
+      background: linear-gradient(135deg, #73b4ff, #4a8df0);
+      color: white;
+      box-shadow: 0 8px 18px rgba(90, 159, 232, 0.22);
+      transition: all 0.18s ease;
+    }
+
+    button.secondary { background: linear-gradient(135deg, #9ec5f3, #78aef0); }
+    button.danger { background: var(--red); }
+    button.blue { background: linear-gradient(135deg, #69b5ff, #5b93f5); }
+    button:hover { filter: brightness(0.96); transform: translateY(-1px); }
+
+    .small {
+      color: var(--sub);
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    .week-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f3f8ff 100%);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      margin-bottom: 18px;
+      overflow: hidden;
+    }
+
+    .week-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      background: linear-gradient(135deg, #e7f1ff, #f5faff);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .week-title {
+      font-size: 18px;
+      font-weight: 900;
+      color: #4a382d;
+    }
+
+    .week-range {
+      color: var(--sub);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .week-table-wrap {
+      overflow-x: auto;
+      padding: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 10px;
+      text-align: center;
+      vertical-align: middle;
+      min-width: 92px;
+    }
+
+    th:last-child, td:last-child { border-right: none; }
+    .divider-row td {
+      border-top: 4px solid #4f86d9 !important;
+    }
+    .divider-row .member-col {
+      border-top: 4px solid #4f86d9 !important;
+    }
+    tr:last-child td { border-bottom: none; }
+
+    th {
+      background: #edf5ff;
+      color: #4a382d;
+      font-weight: 900;
+    }
+
+    .member-col {
+      min-width: 120px;
+      position: sticky;
+      left: 0;
+      z-index: 2;
+      background: #fffdf9;
+      font-weight: 900;
+      color: #4a382d;
+    }
+
+    th.member-col {
+      background: #e3efff;
+      z-index: 3;
+    }
+
+    .date-head {
+      line-height: 1.25;
+      min-width: 82px;
+      white-space: nowrap;
+    }
+
+    .date-num {
+      display: block;
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .day-name {
+      display: none;
+    }
+
+    .sunday { color: var(--red) !important; }
+    .saturday { color: var(--blue) !important; }
+
+    .empty-date {
+      background: #f1f7ff !important;
+      color: #b9aa9a;
+    }
+
+    .holiday-note, .mart-note {
+      display: block;
+      margin-top: 4px;
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+      line-height: 1.2;
+    }
+
+    .holiday-note {
+      color: var(--red);
+    }
+    .mart-note {
+      color: var(--red);
+    }
+    .holiday-cell { background: var(--red-soft); }
+    .mart-cell { background: var(--blue-soft); }
+    .memo-cell { background: var(--yellow); }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--green);
+    }
+
+    .message {
+      margin-top: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      font-weight: 800;
+      white-space: pre-line;
+    }
+
+    .success { background: var(--green-soft); color: #36633f; }
+    .warning { background: #ffe4df; color: #9d3e34; }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .calendar-head {
+      background: linear-gradient(135deg, #e7f2ff, #f5faff);
+      border-radius: 14px;
+      padding: 10px;
+      font-weight: 900;
+      color: #4a382d;
+      text-align: center;
+    }
+
+    .date-box {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px;
+      min-height: 130px;
+    }
+
+    .date-box.empty {
+      background: rgba(255,255,255,0.35);
+      border: 1px dashed #e3d6c6;
+    }
+
+    .date-title {
+      font-weight: 900;
+      color: var(--green);
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+
+    .chip {
+      display: inline-block;
+      background: linear-gradient(135deg, #e9f3ff, #f6fbff);
+      border-radius: 999px;
+      padding: 5px 9px;
+      margin: 3px 2px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .summary-table { margin-top: 16px; }
+    .summary-table td:nth-child(2) { text-align: left; }
+
+    textarea {
+      min-height: 230px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    @page {
+      size: A4 landscape;
+      margin: 10mm;
+    }
+
+    @media print {
+      .hero,
+      .card:not(:has(#resultBox)) {
+        display: none !important;
+      }
+
+      #resultBox {
+        width: 100%;
+      }
+
+      #resultBox h3:last-of-type,
+      .summary-table {
+        display: none !important;
+      }
+
+      .calendar {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      html, body {
+        width: 297mm;
+        height: auto;
+        background: white;
+        zoom: 0.9;
+      }
+
+      body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .wrap {
+        max-width: 100%;
+        padding: 0;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+
+      .card, .hero {
+        box-shadow: none;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin-bottom: 10px;
+      }
+
+      .week-card {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
+      table {
+        width: 100% !important;
+        table-layout: fixed;
+      }
+
+      th, td {
+        min-width: unset;
+        font-size: 10px;
+        padding: 5px;
+      }
+
+      .member-col {
+        min-width: 90px;
+      }
+
+      .date-head {
+        min-width: 55px;
+      }
+
+      .calendar {
+        gap: 4px;
+      }
+
+      .date-box {
+        min-height: 80px;
+        padding: 6px;
+      }
+
+      .chip {
+        font-size: 9px;
+        padding: 3px 6px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      h2, h3 {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .settings-grid, .name-grid { grid-template-columns: 1fr; }
+      .calendar { grid-template-columns: repeat(2, 1fr); }
+      h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>라스브러리 강동팀 근무표</h1>
+      <p class="subtitle">주 4회 10:00~20:00 · 주 5회 10:00~18:00 · 10명 기준 · 월요일 시작 / 일요일 끝 주차 보기</p>
+    </section>
+
+    <section class="card no-print">
+      <h2>0. Firebase 실시간 공유 설정</h2>
+      <div class="guide">
+        Firebase 설정값을 코드 하단 <b>firebaseConfig</b>에 넣으면, 조원들이 같은 링크로 접속해서 체크한 내용이 하나의 표에 실시간 저장됩니다.<br>
+        설정 전에는 기존처럼 내 브라우저 저장 방식으로만 사용할 수 있습니다.
+      </div>
+      <div class="settings-grid">
+        <div>
+          <label for="roomIdInput">공유방 ID</label>
+          <input type="text" id="roomIdInput" value="las-gangdong" />
+        </div>
+        <div>
+          <label for="firebaseStatus">연결 상태</label>
+          <input type="text" id="firebaseStatus" value="Firebase 미연결" readonly />
+        </div>
+        <div>
+          <label>실시간 저장</label>
+          <button class="blue" onclick="saveToFirebaseNow()">Firebase에 저장</button>
+        </div>
+        <div>
+          <label>공유</label>
+          <button class="secondary" onclick="copyWebAppLink()">공유 링크 복사</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card no-print">
+      <h2>1. 근무 월 설정</h2>
+      <div class="guide">
+        연도와 월을 선택한 뒤 <b>근무 체크표 만들기</b>를 누르세요. 한 주가 <b>월요일부터 일요일까지</b> 보이도록 자동 정리됩니다.<br><br>
+        대한민국 공휴일(신정, 삼일절, 어린이날, 현충일, 광복절, 개천절, 한글날, 성탄절)은 자동 표시됩니다.<br>
+        설날·추석·대체공휴일·마트휴무 같은 추가 일정만 직접 입력하면 됩니다.
+      </div>
+
+      <div class="settings-grid">
+        <div>
+          <label for="yearInput">연도</label>
+          <input type="number" id="yearInput" min="2020" max="2100" />
+        </div>
+        <div>
+          <label for="monthInput">월</label>
+          <select id="monthInput">
+            <option value="1">1월</option>
+            <option value="2">2월</option>
+            <option value="3">3월</option>
+            <option value="4">4월</option>
+            <option value="5">5월</option>
+            <option value="6">6월</option>
+            <option value="7">7월</option>
+            <option value="8">8월</option>
+            <option value="9">9월</option>
+            <option value="10">10월</option>
+            <option value="11">11월</option>
+            <option value="12">12월</option>
+          </select>
+        </div>
+        <div>
+          <label for="weeklyCountInput">기본 주 근무 횟수</label>
+          <select id="weeklyCountInput" onchange="updateDefaultWorkType()">
+            <option value="4">주 4회</option>
+            <option value="5">주 5회</option>
+          </select>
+        </div>
+        <div>
+          <label for="targetCountInput">기본 월 목표 근무일</label>
+          <input type="number" id="targetCountInput" min="1" max="31" value="16" />
+        </div>
+      </div>
+
+      <div class="settings-grid">
+        <div style="grid-column: span 2;">
+          <label for="memoInput">추가 특이사항 / 추가 휴무</label>
+          <input type="text" id="memoInput" placeholder="예: 6/9 마트휴무, 6/23 행사" />
+        </div>
+        <div>
+          <label for="workTimeInput">기본 근무 시간</label>
+          <input type="text" id="workTimeInput" value="10:00~20:00" />
+        </div>
+        <div>
+          <label for="workersPerDayInput">최종표 하루 근무자 칸</label>
+          <input type="number" id="workersPerDayInput" min="1" max="10" value="5" />
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button onclick="buildSchedule()">근무 체크표 만들기</button>
+        <button class="secondary" onclick="setTargetByWeeks()">주차 기준 목표일 계산</button>
+        <button class="blue" onclick="saveToBrowser()">현재 내용 저장</button>
+        <button class="secondary" onclick="loadFromBrowser()">저장 내용 불러오기</button>
+        <button class="secondary" onclick="window.print()">PDF로 저장/인쇄</button>
+        <button class="danger" onclick="resetAll()">전체 초기화</button>
+      </div>
+      <p class="small">이 HTML은 브라우저 저장을 지원합니다. 단, 여러 사람이 실시간 동시 편집하는 기능은 없습니다.</p>
+    </section>
+
+    <section class="card">
+      <h2>2. 팀원 이름 / 근무 유형</h2>
+      <div class="name-grid" id="nameGrid"></div>
+    </section>
+
+    <section class="card">
+      <h2>3. 주차별 근무 가능 날짜 체크</h2>
+      <div class="guide">
+        각 주차가 <b>월요일 → 일요일</b> 순서로 표시됩니다. 팀원별로 근무 가능한 날짜를 체크하세요.
+      </div>
+      <div id="weekContainer"></div>
+      <div class="toolbar no-print">
+        <button onclick="autoAssign()">체크 기준 자동 배정</button>
+        <button class="secondary" onclick="checkAll()">전체 체크</button>
+        <button class="secondary" onclick="clearChecks()">체크 지우기</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>4. 자동 배정 결과</h2>
+      <div id="messageBox"></div>
+      <div id="resultBox"></div>
+    </section>
+
+    <section class="card no-print">
+      <h2>5. 조원 공유용 메시지</h2>
+      <textarea id="shareText" placeholder="자동 배정 후 공유용 메시지가 생성됩니다."></textarea>
+      <div class="toolbar">
+        <button onclick="copyShareText()">공유용 메시지 복사</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
+  <script>
+    const weekdays = ['월', '화', '수', '목', '금', '토', '일'];
+    const memberCount = 10;
+    let monthDates = [];
+    let calendarWeeks = [];
+
+    const firebaseConfig = {
+  apiKey: "AIzaSyBON_D1XNRRE9tQGSVPFyDzvHc_gwEGAWg",
+  authDomain: "las-gangdong.firebaseapp.com",
+  databaseURL: "https://las-gangdong-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "las-gangdong",
+  storageBucket: "las-gangdong.firebasestorage.app",
+  messagingSenderId: "33858547272",
+  appId: "1:33858547272:web:39da116ea0acdfa0dff27d",
+  measurementId: "G-X7FY9BZR0B"
+};
+
+    let firebaseDb = null;
+    let firebaseRef = null;
+    let isApplyingFirebaseData = false;
+    let firebaseSaveTimer = null;
+
+    function isFirebaseConfigured() {
+      return firebaseConfig.apiKey && firebaseConfig.databaseURL && firebaseConfig.projectId;
+    }
+
+    function getRoomId() {
+      const input = document.getElementById('roomIdInput');
+      return (input && input.value.trim() ? input.value.trim() : 'las-gangdong').replace(/[^a-zA-Z0-9가-힣_-]/g, '_');
+    }
+
+    function setFirebaseStatus(text) {
+      const status = document.getElementById('firebaseStatus');
+      if (status) status.value = text;
+    }
+
+    function connectFirebase() {
+      if (!isFirebaseConfigured()) {
+        setFirebaseStatus('Firebase 미연결');
+        return;
+      }
+
+      try {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        firebaseDb = firebase.database();
+        firebaseRef = firebaseDb.ref('shiftRooms/' + getRoomId());
+        setFirebaseStatus('Firebase 연결됨');
+
+        firebaseRef.on('value', snapshot => {
+          const data = snapshot.val();
+          if (!data) return;
+          isApplyingFirebaseData = true;
+          applyFirebaseState(data);
+          isApplyingFirebaseData = false;
+          setFirebaseStatus('실시간 동기화 중');
+        });
+      } catch (error) {
+        console.error(error);
+        setFirebaseStatus('Firebase 연결 실패');
+      }
+    }
+
+    function collectFirebaseState() {
+      return {
+        updatedAt: new Date().toISOString(),
+        year: document.getElementById('yearInput').value,
+        month: document.getElementById('monthInput').value,
+        weekly: document.getElementById('weeklyCountInput').value,
+        target: document.getElementById('targetCountInput').value,
+        memo: document.getElementById('memoInput').value,
+        workTime: document.getElementById('workTimeInput').value,
+        workersPerDay: document.getElementById('workersPerDayInput').value,
+        memberTypes: getMemberTypes().map(item => item.type),
+        checks: collectChecks(),
+        resultHtml: document.getElementById('resultBox').innerHTML,
+        messageHtml: document.getElementById('messageBox').innerHTML,
+        shareText: document.getElementById('shareText').value
+      };
+    }
+
+    function applyFirebaseState(state) {
+      if (!state) return;
+      if (state.year) document.getElementById('yearInput').value = state.year;
+      if (state.month) document.getElementById('monthInput').value = state.month;
+      if (state.weekly) document.getElementById('weeklyCountInput').value = state.weekly;
+      if (state.target) document.getElementById('targetCountInput').value = state.target;
+      if (state.memo !== undefined) document.getElementById('memoInput').value = state.memo;
+      if (state.workTime !== undefined) document.getElementById('workTimeInput').value = state.workTime;
+      if (state.workersPerDay !== undefined) document.getElementById('workersPerDayInput').value = state.workersPerDay;
+
+      if (Array.isArray(state.memberTypes)) {
+        state.memberTypes.forEach((type, i) => {
+          const select = document.getElementById(`type-${i}`);
+          if (select) select.value = type;
+        });
+      }
+
+      buildSchedule(false);
+
+      Object.keys(state.checks || {}).forEach(key => {
+        const [memberIndex, ...dateParts] = key.split('-');
+        const dateKey = dateParts.join('-');
+        const cb = document.querySelector(`input[data-member="${memberIndex}"][data-date="${dateKey}"]`);
+        if (cb) cb.checked = true;
+      });
+
+      document.getElementById('resultBox').innerHTML = state.resultHtml || '';
+      document.getElementById('messageBox').innerHTML = state.messageHtml || '';
+      document.getElementById('shareText').value = state.shareText || '';
+    }
+
+    function saveToFirebaseDebounced() {
+      if (isApplyingFirebaseData) return;
+      if (!firebaseRef) return;
+      clearTimeout(firebaseSaveTimer);
+      firebaseSaveTimer = setTimeout(saveToFirebaseNow, 500);
+    }
+
+    function saveToFirebaseNow() {
+      if (!firebaseRef) {
+        alert('Firebase 설정값을 먼저 넣어야 실시간 저장이 가능합니다.');
+        return;
+      }
+      firebaseRef.set(collectFirebaseState());
+      setFirebaseStatus('Firebase 저장 완료');
+    }
+
+    function copyWebAppLink() {
+      const url = new URL(window.location.href);
+      url.searchParams.set('room', getRoomId());
+      navigator.clipboard.writeText(url.toString()).then(() => {
+        alert('공유 링크가 복사되었습니다.');
+      });
+    }
+
+    function init() {
+      const params = new URLSearchParams(window.location.search);
+      const room = params.get('room');
+      if (room) document.getElementById('roomIdInput').value = room;
+
+      const now = new Date();
+      document.getElementById('yearInput').value = now.getFullYear();
+      document.getElementById('monthInput').value = now.getMonth() + 1;
+      buildNameInputs();
+      buildSchedule();
+      connectFirebase();
+    }
+
+    function buildNameInputs() {
+      const fixedMembers = [
+        '장서희(1기)',
+        '김성민(1기)',
+        '백수현(1기)',
+        '정현창(1기)',
+        '주하은(1기)',
+        '박서윤(1기)',
+        '권아연(2기)',
+        '양창희(2기)',
+        '권은서(2기)',
+        '김정우(2기)'
+      ];
+
+      const grid = document.getElementById('nameGrid');
+      grid.innerHTML = '';
+      for (let i = 0; i < memberCount; i++) {
+        const box = document.createElement('div');
+        box.innerHTML = `
+          <label for="member-${i}">팀원 ${i + 1}</label>
+          <input type="text" id="member-${i}" value="${fixedMembers[i]}" readonly />
+          <select id="type-${i}" class="member-type" onchange="refreshMemberNames(); saveToFirebaseDebounced();">
+            <option value="4">주 4회 · 10:00~20:00</option>
+            <option value="5">주 5회 · 10:00~18:00</option>
+          </select>
+        `;
+        grid.appendChild(box);
+      }
+    }
+
+    function getMembers() {
+      return Array.from({ length: memberCount }, (_, i) => {
+        const input = document.getElementById(`member-${i}`);
+        return input.value.trim() || `팀원 ${i + 1}`;
+      });
+    }
+
+    function getMemberTypes() {
+      return Array.from({ length: memberCount }, (_, i) => {
+        const select = document.getElementById(`type-${i}`);
+        const type = select ? select.value : '4';
+        return {
+          type,
+          weeklyCount: type === '5' ? 5 : 4,
+          workTime: type === '5' ? '10:00~18:00' : '10:00~20:00'
+        };
+      });
+    }
+
+    function getWeeksCount() {
+      monthDates = buildMonthDates();
+      calendarWeeks = buildCalendarWeeks(monthDates);
+      return 4;
+    }
+
+    function updateDefaultWorkType() {
+      const weekly = Number(document.getElementById('weeklyCountInput').value) || 4;
+      document.getElementById('workTimeInput').value = weekly === 5 ? '10:00~18:00' : '10:00~20:00';
+      setTargetByWeeks();
+    }
+
+    function getKoreanHolidayMap(year) {
+      const holidays = {
+        [`${year}-01-01`]: '신정',
+        [`${year}-03-01`]: '삼일절',
+        [`${year}-05-05`]: '어린이날',
+        [`${year}-06-06`]: '현충일',
+        [`${year}-08-15`]: '광복절',
+        [`${year}-10-03`]: '개천절',
+        [`${year}-10-09`]: '한글날',
+        [`${year}-12-25`]: '성탄절'
+      };
+
+      const movable2026 = {
+        '2026-02-16': '설날 연휴',
+        '2026-02-17': '설날',
+        '2026-02-18': '설날 연휴',
+        '2026-03-02': '대체공휴일',
+        '2026-05-05': '어린이날',
+        '2026-05-24': '부처님오신날',
+        '2026-05-25': '대체공휴일',
+        '2026-08-17': '대체공휴일',
+        '2026-09-24': '추석 연휴',
+        '2026-09-25': '추석',
+        '2026-09-26': '추석 연휴',
+        '2026-09-28': '대체공휴일',
+        '2026-10-05': '대체공휴일'
+      };
+
+      Object.assign(holidays, movable2026);
+      return holidays;
+    }
+
+    function getSecondAndFourthSundayMartClosings(year, month) {
+      const result = [];
+      const lastDay = new Date(year, month, 0).getDate();
+      const sundays = [];
+
+      for (let day = 1; day <= lastDay; day++) {
+        const date = new Date(year, month - 1, day);
+        if (date.getDay() === 0) {
+          sundays.push(day);
+        }
+      }
+
+      [1, 3].forEach(index => {
+        if (sundays[index]) {
+          result.push(sundays[index]);
+        }
+      });
+
+      return result;
+    }
+
+    function parseMemoMap() {
+      const year = Number(document.getElementById('yearInput').value);
+      const month = Number(document.getElementById('monthInput').value);
+      const text = document.getElementById('memoInput').value || '';
+      const map = getKoreanHolidayMap(year);
+
+      const martClosings = getSecondAndFourthSundayMartClosings(year, month);
+      martClosings.forEach(day => {
+        const key = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        map[key] = '마트휴무';
+      });
+
+      text.split(',').map(v => v.trim()).filter(Boolean).forEach(item => {
+        const parts = item.split(' ');
+        const dateText = parts[0] || '';
+        const memo = parts.slice(1).join(' ').trim() || '특이사항';
+        const nums = dateText.replaceAll('-', '/').replaceAll('.', '/').split('/').map(Number);
+        let y = year, m, d;
+
+        if (nums.length === 3) {
+          y = nums[0];
+          m = nums[1];
+          d = nums[2];
+        } else if (nums.length === 2) {
+          m = nums[0];
+          d = nums[1];
+        }
+
+        if (y && m && d) {
+          const key = `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          map[key] = memo;
+        }
+      });
+      return map;
+    }
+
+    function buildMonthDates() {
+      const year = Number(document.getElementById('yearInput').value);
+      const month = Number(document.getElementById('monthInput').value);
+      const memoMap = parseMemoMap();
+      const lastDay = new Date(year, month, 0).getDate();
+      const dates = [];
+
+      for (let day = 1; day <= lastDay; day++) {
+        const dateObj = new Date(year, month - 1, day);
+        const key = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        dates.push({
+          year,
+          month,
+          day,
+          weekdayIndex: (dateObj.getDay() + 6) % 7,
+          weekday: weekdays[(dateObj.getDay() + 6) % 7],
+          key,
+          memo: memoMap[key] || ''
+        });
+      }
+      return dates;
+    }
+
+    function buildCalendarWeeks(dates) {
+      const weeks = [];
+      let currentWeek = Array(7).fill(null);
+
+      dates.forEach((dateInfo, index) => {
+        if (index === 0) {
+          currentWeek = Array(7).fill(null);
+        }
+
+        currentWeek[dateInfo.weekdayIndex] = dateInfo;
+
+        if (dateInfo.weekdayIndex === 6 || index === dates.length - 1) {
+          weeks.push(currentWeek);
+          currentWeek = Array(7).fill(null);
+        }
+      });
+
+      return weeks;
+    }
+
+    function buildSchedule(keepChecks = false) {
+      const oldChecks = collectChecks();
+      monthDates = buildMonthDates();
+      calendarWeeks = buildCalendarWeeks(monthDates);
+
+      const container = document.getElementById('weekContainer');
+      const members = getMembers();
+      container.innerHTML = '';
+
+      calendarWeeks.forEach((week, weekIndex) => {
+        const realDates = week.filter(Boolean);
+        const start = realDates[0];
+        const end = realDates[realDates.length - 1];
+        const weekCard = document.createElement('div');
+        weekCard.className = 'week-card';
+
+        weekCard.innerHTML = `
+          <div class="week-header">
+            <div>
+              <div class="week-title">${weekIndex + 1}주차</div>
+              <div class="week-range">${start.month}/${start.day}(${start.weekday}) ~ ${end.month}/${end.day}(${end.weekday})</div>
+            </div>
+            <div class="toolbar no-print" style="margin:0;">
+              <button class="secondary" onclick="checkWeek(${weekIndex})">이 주차 전체 체크</button>
+              <button class="secondary" onclick="clearWeek(${weekIndex})">이 주차 체크 해제</button>
+            </div>
+          </div>
+          <div class="week-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th class="member-col">팀원명</th>
+                  ${week.map((dateInfo, dayIndex) => buildDateHeader(dateInfo, dayIndex)).join('')}
+                </tr>
+              </thead>
+              <tbody>
+                ${members.map((name, memberIndex) => `
+                  <tr class="${memberIndex === 6 ? 'divider-row' : ''}">
+                    <td class="member-col">${name}</td>
+                    ${week.map((dateInfo, dayIndex) => buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, keepChecks)).join('')}
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+        container.appendChild(weekCard);
+      });
+
+      clearResult();
+    }
+
+    function buildDateHeader(dateInfo, dayIndex) {
+      const dayClass = dayIndex === 6 ? 'sunday' : dayIndex === 5 ? 'saturday' : '';
+      if (!dateInfo) {
+        return `<th class="date-head empty-date"><span class="date-num">-</span></th>`;
+      }
+      const memoClass = dateInfo.memo.includes('마트') ? 'mart-note' : dateInfo.memo ? 'holiday-note' : '';
+      const isSpecialDay = !!dateInfo.memo;
+      const specialClass = isSpecialDay ? 'sunday' : dayClass;
+
+      return `
+        <th class="date-head ${isSpecialDay ? 'holiday-cell' : ''}">
+          <span class="date-num ${specialClass}">${dateInfo.month}/${dateInfo.day}(${dateInfo.weekday})</span>
+          ${dateInfo.memo ? `<span class="${memoClass}">${dateInfo.memo}</span>` : ''}
+        </th>
+        </th>
+      `;
+    }
+
+    function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, keepChecks) {
+      if (!dateInfo) return `<td class="empty-date"></td>`;
+      const memoCellClass = dateInfo.memo.includes('마트') ? 'mart-cell' : dateInfo.memo ? 'holiday-cell' : '';
+      const key = `${memberIndex}-${dateInfo.key}`;
+      const checked = keepChecks && oldChecks[key] ? 'checked' : '';
+      return `<td class="${memoCellClass}"><input type="checkbox" data-week="${weekIndex}" data-member="${memberIndex}" data-date="${dateInfo.key}" ${checked} onchange="saveToFirebaseDebounced()"></td>`;
+    }
+
+    function refreshMemberNames() {
+      buildSchedule(true);
+    }
+
+    function collectChecks() {
+      const checks = {};
+      document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => {
+        if (cb.checked) checks[`${cb.dataset.member}-${cb.dataset.date}`] = true;
+      });
+      return checks;
+    }
+
+    function checkWeek(weekIndex) {
+      document.querySelectorAll(`input[data-week="${weekIndex}"]`).forEach(cb => cb.checked = true);
+      clearResult();
+      saveToFirebaseDebounced();
+    }
+
+    function clearWeek(weekIndex) {
+      document.querySelectorAll(`input[data-week="${weekIndex}"]`).forEach(cb => cb.checked = false);
+      clearResult();
+      saveToFirebaseDebounced();
+    }
+
+    function checkAll() {
+      document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => cb.checked = true);
+      clearResult();
+      saveToFirebaseDebounced();
+    }
+
+    function clearChecks() {
+      document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => cb.checked = false);
+      clearResult();
+      saveToFirebaseDebounced();
+    }
+
+    function getAvailability() {
+      const members = getMembers();
+      return members.map((name, memberIndex) => {
+        const available = monthDates.filter(dateInfo => {
+          const cb = document.querySelector(`input[data-member="${memberIndex}"][data-date="${dateInfo.key}"]`);
+          return cb && cb.checked;
+        });
+        const typeInfo = getMemberTypes()[memberIndex];
+        return { name, memberIndex, available, assigned: [], ...typeInfo, targetCount: typeInfo.weeklyCount * getWeeksCount() };
+      });
+    }
+
+    function autoAssign() {
+      const defaultTargetCount = Number(document.getElementById('targetCountInput').value) || 16;
+      const defaultWeeklyLimit = Number(document.getElementById('weeklyCountInput').value) || 4;
+      const members = getAvailability();
+      const errors = [];
+
+      members.forEach(member => {
+        if (member.available.length < member.targetCount) {
+          errors.push(`${member.name}: 가능한 날짜 ${member.available.length}개 / 목표 ${member.targetCount}개 (${member.weeklyCount}회 근무형)`);
+        }
+      });
+
+      if (errors.length) {
+        showMessage('warning', '목표 근무일을 채우기 어려운 팀원이 있습니다.\n' + errors.join('\n'));
+        return;
+      }
+
+      const dateCountMap = {};
+      monthDates.forEach(d => dateCountMap[d.key] = 0);
+
+      members
+        .sort((a, b) => a.available.length - b.available.length)
+        .forEach(member => {
+          const weekCount = {};
+          const sortedDates = member.available
+            .map(d => ({ ...d, count: dateCountMap[d.key], week: getWeekIndexByKey(d.key) }))
+            .sort((a, b) => a.week - b.week || a.count - b.count || a.day - b.day);
+
+          for (const dateInfo of sortedDates) {
+            if (member.assigned.length >= member.targetCount) break;
+            weekCount[dateInfo.week] = weekCount[dateInfo.week] || 0;
+            if (weekCount[dateInfo.week] >= member.weeklyCount) continue;
+            member.assigned.push(dateInfo);
+            weekCount[dateInfo.week]++;
+            dateCountMap[dateInfo.key]++;
+          }
+
+          if (member.assigned.length < member.targetCount) {
+            for (const dateInfo of sortedDates) {
+              if (member.assigned.length >= member.targetCount) break;
+              if (member.assigned.some(d => d.key === dateInfo.key)) continue;
+              member.assigned.push(dateInfo);
+              dateCountMap[dateInfo.key]++;
+            }
+          }
+
+          member.assigned.sort((a, b) => a.key.localeCompare(b.key));
+        });
+
+      renderResult(members, defaultTargetCount);
+      showMessage('success', '자동 배정이 완료되었습니다. 아래 결과를 확인한 뒤 조원들에게 공유하세요.');
+      saveToFirebaseDebounced();
+    }
+
+    function getWeekIndexByKey(key) {
+      for (let i = 0; i < calendarWeeks.length; i++) {
+        if (calendarWeeks[i].some(d => d && d.key === key)) return i;
+      }
+      return 0;
+    }
+
+    function renderResult(members, targetCount) {
+      const resultBox = document.getElementById('resultBox');
+      const year = Number(document.getElementById('yearInput').value);
+      const month = Number(document.getElementById('monthInput').value);
+      const workTime = document.getElementById('workTimeInput').value || '10:00~20:00';
+      const dateMap = {};
+      monthDates.forEach(d => dateMap[d.key] = []);
+
+      members.forEach(member => {
+        member.assigned.forEach(dateInfo => dateMap[dateInfo.key].push(member.name));
+      });
+
+      const firstWeekday = (new Date(year, month - 1, 1).getDay() + 6) % 7;
+      const lastDay = new Date(year, month, 0).getDate();
+      const calendarCells = [];
+      for (let i = 0; i < firstWeekday; i++) calendarCells.push(null);
+      monthDates.forEach(d => calendarCells.push(d));
+      while (calendarCells.length % 7 !== 0) calendarCells.push(null);
+
+      const calendarHtml = `
+        <div class="calendar">
+          ${weekdays.map((w, i) => `<div class="calendar-head ${i === 6 ? 'sunday' : i === 5 ? 'saturday' : ''}">${w}</div>`).join('')}
+          ${calendarCells.map(dateInfo => {
+            if (!dateInfo) return '<div class="date-box empty"></div>';
+            const memoClass = dateInfo.memo.includes('마트') ? 'mart-note' : dateInfo.memo ? 'holiday-note' : '';
+            return `
+              <div class="date-box">
+                <div class="date-title">${dateInfo.month}/${dateInfo.day} (${dateInfo.weekday}) ${dateInfo.memo ? `<span class="${memoClass}">${dateInfo.memo}</span>` : ''}</div>
+                ${dateMap[dateInfo.key].length ? dateMap[dateInfo.key].map(name => `<span class="chip">${name}</span>`).join('') : '<span class="small">배정 없음</span>'}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+
+      const summaryHtml = `
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>팀원명</th>
+              <th>근무 유형</th>
+              <th>근무 시간</th>
+              <th>근무 날짜</th>
+              <th>근무 횟수</th>
+              <th>상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${members.sort((a, b) => a.memberIndex - b.memberIndex).map(member => {
+              const count = member.assigned.length;
+              const memberTarget = member.targetCount || targetCount;
+              const status = count === memberTarget ? '정상' : count < memberTarget ? '부족' : '초과';
+              return `
+                <tr>
+                  <td>${member.name}</td>
+                  <td>주 ${member.weeklyCount}회</td>
+                  <td>${member.workTime}</td>
+                  <td>${member.assigned.map(d => `${d.month}/${d.day}(${d.weekday})`).join(', ')}</td>
+                  <td>${count}회 / 목표 ${memberTarget}회</td>
+                  <td>${status}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+
+      resultBox.innerHTML = `<h3>${year}년 ${month}월 달력형 근무표</h3>${calendarHtml}<h3>팀원별 근무 요약</h3>${summaryHtml}`;
+      buildShareText(members, year, month, workTime, targetCount);
+    }
+
+    function buildShareText(members, year, month, workTime, targetCount) {
+      let text = `강동팀 ${year}년 ${month}월 근무 계획표 공유드립니다.
+`;
+      text += `근무유형: 주 4회 10:00~20:00 / 주 5회 10:00~18:00
+
+`;
+
+      members.sort((a, b) => a.memberIndex - b.memberIndex).forEach(member => {
+        text += `${member.name} [주 ${member.weeklyCount}회 / ${member.workTime}]: ${member.assigned.map(d => `${d.month}/${d.day}(${d.weekday})`).join(', ') || '배정 없음'} / 총 ${member.assigned.length}회`;
+        if (member.assigned.length !== member.targetCount) text += ` ※ 목표 ${member.targetCount}회와 다름`;
+        text += '\n';
+      });
+
+      text += '\n확인 후 수정이 필요한 부분 있으면 말씀 부탁드립니다.';
+      document.getElementById('shareText').value = text;
+    }
+
+    function showMessage(type, text) {
+      document.getElementById('messageBox').innerHTML = `<div class="message ${type}">${text}</div>`;
+    }
+
+    function clearResult() {
+      document.getElementById('messageBox').innerHTML = '';
+      document.getElementById('resultBox').innerHTML = '';
+      document.getElementById('shareText').value = '';
+    }
+
+    function setTargetByWeeks() {
+      monthDates = buildMonthDates();
+      calendarWeeks = buildCalendarWeeks(monthDates);
+      const weekly = Number(document.getElementById('weeklyCountInput').value) || 4;
+      document.getElementById('targetCountInput').value = calendarWeeks.length * weekly;
+    }
+
+    function saveToBrowser() {
+      const state = {
+        year: document.getElementById('yearInput').value,
+        month: document.getElementById('monthInput').value,
+        weekly: document.getElementById('weeklyCountInput').value,
+        target: document.getElementById('targetCountInput').value,
+        memo: document.getElementById('memoInput').value,
+        workTime: document.getElementById('workTimeInput').value,
+        members: getMembers(),
+        checks: collectChecks()
+      };
+      localStorage.setItem('gangdongShiftPlan', JSON.stringify(state));
+      alert('현재 내용이 이 브라우저에 저장되었습니다.');
+    }
+
+    function loadFromBrowser() {
+      const saved = localStorage.getItem('gangdongShiftPlan');
+      if (!saved) {
+        alert('저장된 내용이 없습니다.');
+        return;
+      }
+      const state = JSON.parse(saved);
+      document.getElementById('yearInput').value = state.year;
+      document.getElementById('monthInput').value = state.month;
+      document.getElementById('weeklyCountInput').value = state.weekly;
+      document.getElementById('targetCountInput').value = state.target;
+      document.getElementById('memoInput').value = state.memo;
+      document.getElementById('workTimeInput').value = state.workTime;
+      state.members.forEach((name, i) => {
+        const input = document.getElementById(`member-${i}`);
+        if (input) input.value = name;
+      });
+      buildSchedule(false);
+      Object.keys(state.checks || {}).forEach(key => {
+        const [memberIndex, ...dateParts] = key.split('-');
+        const dateKey = dateParts.join('-');
+        const cb = document.querySelector(`input[data-member="${memberIndex}"][data-date="${dateKey}"]`);
+        if (cb) cb.checked = true;
+      });
+      alert('저장된 내용을 불러왔습니다.');
+    }
+
+    function resetAll() {
+      if (!confirm('입력한 내용과 체크를 모두 초기화할까요?')) return;
+      localStorage.removeItem('gangdongShiftPlan');
+      init();
+      document.getElementById('memoInput').value = '';
+      document.getElementById('workTimeInput').value = '10:00~20:00';
+      document.getElementById('targetCountInput').value = 16;
+      document.getElementById('weeklyCountInput').value = 4;
+      clearResult();
+    }
+
+    function copyShareText() {
+      const text = document.getElementById('shareText');
+      text.select();
+      document.execCommand('copy');
+      alert('공유용 메시지가 복사되었습니다.');
+    }
+
+    init();
+  </script>
+</body>
+</html>
