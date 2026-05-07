@@ -1029,8 +1029,11 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
     dateInfo.day
   );
 
+  cellDate.setHours(0, 0, 0, 0);
+
   // 지난 날짜 여부
   const isPast = cellDate < today;
+  const isMartClosed = dateInfo.memo && dateInfo.memo.includes('마트');
 
   return `
     <td class="${memoCellClass}">
@@ -1040,7 +1043,7 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
   data-member="${memberIndex}"
   data-date="${dateInfo.key}"
   ${checked}
-  ${isPast || dateInfo.memo.includes('마트') ? 'disabled' : ''}
+  ${isPast || isMartClosed ? 'disabled' : ''}
   onchange="saveCheckToSheet(${memberIndex}, '${dateInfo.key}', this.checked)"
 >
     </td>
