@@ -309,6 +309,25 @@
       accent-color: var(--green);
     }
 
+    input[type="checkbox"]:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .locked-cell {
+      background: #f3f4f6 !important;
+      color: #a0a8b3;
+    }
+
+    .past-lock {
+      display: block;
+      margin-top: 4px;
+      font-size: 10px;
+      font-weight: 900;
+      color: #9aa4b2;
+      white-space: nowrap;
+    }
+
     .message {
       margin-top: 12px;
       padding: 14px 16px;
@@ -547,7 +566,8 @@
     <section class="card">
       <h2>3. 주차별 근무 가능 날짜 체크</h2>
       <div class="guide">
-        각 주차가 <b>월요일 → 일요일</b> 순서로 표시됩니다. 팀원별로 근무 가능한 날짜를 체크하세요.
+        각 주차가 <b>월요일 → 일요일</b> 순서로 표시됩니다. 팀원별로 근무 가능한 날짜를 체크하세요.<br>
+        <b>오늘 이전 날짜</b>는 자동으로 잠금 처리되어 체크를 수정할 수 없습니다.
       </div>
       <div id="weekContainer"></div>
       <div class="toolbar no-print">
@@ -848,12 +868,23 @@
       `;
     }
 
+    function isPastDate(dateInfo) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const targetDate = new Date(dateInfo.year, dateInfo.month - 1, dateInfo.day);
+      targetDate.setHours(0, 0, 0, 0);
+      return targetDate < today;
+    }
+
     function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, keepChecks) {
       if (!dateInfo) return `<td class="empty-date"></td>`;
       const memoCellClass = dateInfo.memo.includes('마트') ? 'mart-cell' : dateInfo.memo ? 'holiday-cell' : '';
+      const locked = isPastDate(dateInfo);
       const key = `${memberIndex}-${dateInfo.key}`;
       const checked = keepChecks && oldChecks[key] ? 'checked' : '';
-      return `<td class="${memoCellClass}"><input type="checkbox" data-week="${weekIndex}" data-member="${memberIndex}" data-date="${dateInfo.key}" ${checked}></td>`;
+      const disabled = locked ? 'disabled' : '';
+      const lockText = locked ? '<span class="past-lock">지난 날짜</span>' : '';
+      return `<td class="${memoCellClass} ${locked ? 'locked-cell' : ''}"><input type="checkbox" data-week="${weekIndex}" data-member="${memberIndex}" data-date="${dateInfo.key}" ${checked} ${disabled}>${lockText}</td>`;
     }
 
     function refreshMemberNames() {
@@ -869,22 +900,22 @@
     }
 
     function checkWeek(weekIndex) {
-      document.querySelectorAll(`input[data-week="${weekIndex}"]`).forEach(cb => cb.checked = true);
+      document.querySelectorAll(`input[data-week="${weekIndex}"]`).forEach(cb => { if (!cb.disabled) cb.checked = true; });
       clearResult();
     }
 
     function clearWeek(weekIndex) {
-      document.querySelectorAll(`input[data-week="${weekIndex}"]`).forEach(cb => cb.checked = false);
+      document.querySelectorAll(`input[data-week="${weekIndex}"]`).forEach(cb => { if (!cb.disabled) cb.checked = false; });
       clearResult();
     }
 
     function checkAll() {
-      document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => cb.checked = true);
+      document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => { if (!cb.disabled) cb.checked = true; });
       clearResult();
     }
 
     function clearChecks() {
-      document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => cb.checked = false);
+      document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => { if (!cb.disabled) cb.checked = false; });
       clearResult();
     }
 
