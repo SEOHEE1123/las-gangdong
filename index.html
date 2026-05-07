@@ -605,8 +605,10 @@ input[type="checkbox"]:disabled:checked {
       </div>
     </section>
   </div>
-
+  
   <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbx75l3lq-fAUBCFbVDbYfzk0-VsxEx3xpe1WGuFSqmZKx1cFS_TUZ45RnQsN8RLkBnz/exec';
+    
     const weekdays = ['월', '화', '수', '목', '금', '토', '일'];
     const memberCount = 9;
     let monthDates = [];
@@ -980,13 +982,14 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
   return `
     <td class="${memoCellClass}">
       <input
-        type="checkbox"
-        data-week="${weekIndex}"
-        data-member="${memberIndex}"
-        data-date="${dateInfo.key}"
-        ${checked}
-        ${isPast ? 'disabled' : ''}
-      >
+  type="checkbox"
+  data-week="${weekIndex}"
+  data-member="${memberIndex}"
+  data-date="${dateInfo.key}"
+  ${checked}
+  ${isPast ? 'disabled' : ''}
+  onchange="saveCheckToSheet(${memberIndex}, '${dateInfo.key}', this.checked)"
+>
     </td>
   `;
 }
@@ -1001,6 +1004,20 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
       });
       return checks;
     }
+
+    async function saveCheckToSheet(memberIndex, dateKey, checked) {
+  const members = getMembers();
+  const memberName = members[memberIndex];
+
+  try {
+    await fetch(
+      `${API_URL}?action=saveCheck&date=${dateKey}&name=${encodeURIComponent(memberName)}&checked=${checked}`
+    );
+  } catch (error) {
+    console.error('구글시트 저장 실패', error);
+    alert('저장 실패');
+  }
+}
 
     function checkWeek(weekIndex) {
       document.querySelectorAll(`input[data-week="${weekIndex}"]`).forEach(cb => { if (!cb.disabled) cb.checked = true; });
