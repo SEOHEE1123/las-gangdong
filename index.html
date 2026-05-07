@@ -381,24 +381,6 @@
     }
 
     @media print {
-      .hero,
-      .card:not(:has(#resultBox)) {
-        display: none !important;
-      }
-
-      #resultBox {
-        width: 100%;
-      }
-
-      #resultBox h3:last-of-type,
-      .summary-table {
-        display: none !important;
-      }
-
-      .calendar {
-        page-break-inside: avoid;
-        break-inside: avoid;
-      }
       html, body {
         width: 297mm;
         height: auto;
@@ -489,32 +471,6 @@
     </section>
 
     <section class="card no-print">
-      <h2>0. Firebase 실시간 공유 설정</h2>
-      <div class="guide">
-        Firebase 설정값을 코드 하단 <b>firebaseConfig</b>에 넣으면, 조원들이 같은 링크로 접속해서 체크한 내용이 하나의 표에 실시간 저장됩니다.<br>
-        설정 전에는 기존처럼 내 브라우저 저장 방식으로만 사용할 수 있습니다.
-      </div>
-      <div class="settings-grid">
-        <div>
-          <label for="roomIdInput">공유방 ID</label>
-          <input type="text" id="roomIdInput" value="las-gangdong" />
-        </div>
-        <div>
-          <label for="firebaseStatus">연결 상태</label>
-          <input type="text" id="firebaseStatus" value="Firebase 미연결" readonly />
-        </div>
-        <div>
-          <label>실시간 저장</label>
-          <button class="blue" onclick="saveToFirebaseNow()">Firebase에 저장</button>
-        </div>
-        <div>
-          <label>공유</label>
-          <button class="secondary" onclick="copyWebAppLink()">공유 링크 복사</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="card no-print">
       <h2>1. 근무 월 설정</h2>
       <div class="guide">
         연도와 월을 선택한 뒤 <b>근무 체크표 만들기</b>를 누르세요. 한 주가 <b>월요일부터 일요일까지</b> 보이도록 자동 정리됩니다.<br><br>
@@ -568,7 +524,7 @@
         </div>
         <div>
           <label for="workersPerDayInput">최종표 하루 근무자 칸</label>
-          <input type="number" id="workersPerDayInput" min="1" max="9" value="5" />
+          <input type="number" id="workersPerDayInput" min="1" max="10" value="5" />
         </div>
       </div>
 
@@ -616,170 +572,32 @@
     </section>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
   <script>
     const weekdays = ['월', '화', '수', '목', '금', '토', '일'];
     const memberCount = 9;
     let monthDates = [];
     let calendarWeeks = [];
 
-    const firebaseConfig = {
-  apiKey: "AIzaSyBON_D1XNRRE9tQGSVPFyDzvHc_gwEGAWg",
-  authDomain: "las-gangdong.firebaseapp.com",
-  databaseURL: "https://las-gangdong-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "las-gangdong",
-  storageBucket: "las-gangdong.firebasestorage.app",
-  messagingSenderId: "33858547272",
-  appId: "1:33858547272:web:39da116ea0acdfa0dff27d",
-  measurementId: "G-X7FY9BZR0B"
-};
-
-    let firebaseDb = null;
-    let firebaseRef = null;
-    let isApplyingFirebaseData = false;
-    let firebaseSaveTimer = null;
-
-    function isFirebaseConfigured() {
-      return firebaseConfig.apiKey && firebaseConfig.databaseURL && firebaseConfig.projectId;
-    }
-
-    function getRoomId() {
-      const input = document.getElementById('roomIdInput');
-      return (input && input.value.trim() ? input.value.trim() : 'las-gangdong').replace(/[^a-zA-Z0-9가-힣_-]/g, '_');
-    }
-
-    function setFirebaseStatus(text) {
-      const status = document.getElementById('firebaseStatus');
-      if (status) status.value = text;
-    }
-
-    function connectFirebase() {
-      if (!isFirebaseConfigured()) {
-        setFirebaseStatus('Firebase 미연결');
-        return;
-      }
-
-      try {
-        if (!firebase.apps.length) {
-          firebase.initializeApp(firebaseConfig);
-        }
-        firebaseDb = firebase.database();
-        firebaseRef = firebaseDb.ref('shiftRooms/' + getRoomId());
-        setFirebaseStatus('Firebase 연결됨');
-
-        firebaseRef.on('value', snapshot => {
-          const data = snapshot.val();
-          if (!data) return;
-          isApplyingFirebaseData = true;
-          applyFirebaseState(data);
-          isApplyingFirebaseData = false;
-          setFirebaseStatus('실시간 동기화 중');
-        });
-      } catch (error) {
-        console.error(error);
-        setFirebaseStatus('Firebase 연결 실패');
-      }
-    }
-
-    function collectFirebaseState() {
-      return {
-        updatedAt: new Date().toISOString(),
-        year: document.getElementById('yearInput').value,
-        month: document.getElementById('monthInput').value,
-        weekly: document.getElementById('weeklyCountInput').value,
-        target: document.getElementById('targetCountInput').value,
-        memo: document.getElementById('memoInput').value,
-        workTime: document.getElementById('workTimeInput').value,
-        workersPerDay: document.getElementById('workersPerDayInput').value,
-        memberTypes: getMemberTypes().map(item => item.type),
-        checks: collectChecks(),
-        resultHtml: document.getElementById('resultBox').innerHTML,
-        messageHtml: document.getElementById('messageBox').innerHTML,
-        shareText: document.getElementById('shareText').value
-      };
-    }
-
-    function applyFirebaseState(state) {
-      if (!state) return;
-      if (state.year) document.getElementById('yearInput').value = state.year;
-      if (state.month) document.getElementById('monthInput').value = state.month;
-      if (state.weekly) document.getElementById('weeklyCountInput').value = state.weekly;
-      if (state.target) document.getElementById('targetCountInput').value = state.target;
-      if (state.memo !== undefined) document.getElementById('memoInput').value = state.memo;
-      if (state.workTime !== undefined) document.getElementById('workTimeInput').value = state.workTime;
-      if (state.workersPerDay !== undefined) document.getElementById('workersPerDayInput').value = state.workersPerDay;
-
-      if (Array.isArray(state.memberTypes)) {
-        state.memberTypes.forEach((type, i) => {
-          const select = document.getElementById(`type-${i}`);
-          if (select) select.value = type;
-        });
-      }
-
-      buildSchedule(false);
-
-      Object.keys(state.checks || {}).forEach(key => {
-        const [memberIndex, ...dateParts] = key.split('-');
-        const dateKey = dateParts.join('-');
-        const cb = document.querySelector(`input[data-member="${memberIndex}"][data-date="${dateKey}"]`);
-        if (cb) cb.checked = true;
-      });
-
-      document.getElementById('resultBox').innerHTML = state.resultHtml || '';
-      document.getElementById('messageBox').innerHTML = state.messageHtml || '';
-      document.getElementById('shareText').value = state.shareText || '';
-    }
-
-    function saveToFirebaseDebounced() {
-      if (isApplyingFirebaseData) return;
-      if (!firebaseRef) return;
-      clearTimeout(firebaseSaveTimer);
-      firebaseSaveTimer = setTimeout(saveToFirebaseNow, 500);
-    }
-
-    function saveToFirebaseNow() {
-      if (!firebaseRef) {
-        alert('Firebase 설정값을 먼저 넣어야 실시간 저장이 가능합니다.');
-        return;
-      }
-      firebaseRef.set(collectFirebaseState());
-      setFirebaseStatus('Firebase 저장 완료');
-    }
-
-    function copyWebAppLink() {
-      const url = new URL(window.location.href);
-      url.searchParams.set('room', getRoomId());
-      navigator.clipboard.writeText(url.toString()).then(() => {
-        alert('공유 링크가 복사되었습니다.');
-      });
-    }
-
     function init() {
-      const params = new URLSearchParams(window.location.search);
-      const room = params.get('room');
-      if (room) document.getElementById('roomIdInput').value = room;
-
       const now = new Date();
       document.getElementById('yearInput').value = now.getFullYear();
       document.getElementById('monthInput').value = now.getMonth() + 1;
       buildNameInputs();
       buildSchedule();
-      connectFirebase();
     }
 
     function buildNameInputs() {
-     const fixedMembers = [
-  '장서희(1기)',
-  '김성민(1기)',
-  '백수현(1기)',
-  '정현창(1기)',
-  '주하은(1기)',
-  '박서윤(1기)',
-  '양창희(2기)',
-  '권은서(2기)',
-  '김정우(2기)'
-];
+      const fixedMembers = [
+        '장서희(1기)',
+        '김성민(1기)',
+        '백수현(1기)',
+        '정현창(1기)',
+        '주하은(1기)',
+        '박서윤(1기)',
+        '양창희(2기)',
+        '권은서(2기)',
+        '김정우(2기)'
+      ];
 
       const grid = document.getElementById('nameGrid');
       grid.innerHTML = '';
@@ -788,7 +606,7 @@
         box.innerHTML = `
           <label for="member-${i}">팀원 ${i + 1}</label>
           <input type="text" id="member-${i}" value="${fixedMembers[i]}" readonly />
-          <select id="type-${i}" class="member-type" onchange="refreshMemberNames(); saveToFirebaseDebounced();">
+          <select id="type-${i}" class="member-type" onchange="refreshMemberNames()">
             <option value="4">주 4회 · 10:00~20:00</option>
             <option value="5">주 5회 · 10:00~18:00</option>
           </select>
@@ -819,7 +637,7 @@
     function getWeeksCount() {
       monthDates = buildMonthDates();
       calendarWeeks = buildCalendarWeeks(monthDates);
-      return 4;
+      return calendarWeeks.length || 4;
     }
 
     function updateDefaultWorkType() {
@@ -1035,7 +853,7 @@
       const memoCellClass = dateInfo.memo.includes('마트') ? 'mart-cell' : dateInfo.memo ? 'holiday-cell' : '';
       const key = `${memberIndex}-${dateInfo.key}`;
       const checked = keepChecks && oldChecks[key] ? 'checked' : '';
-      return `<td class="${memoCellClass}"><input type="checkbox" data-week="${weekIndex}" data-member="${memberIndex}" data-date="${dateInfo.key}" ${checked} onchange="saveToFirebaseDebounced()"></td>`;
+      return `<td class="${memoCellClass}"><input type="checkbox" data-week="${weekIndex}" data-member="${memberIndex}" data-date="${dateInfo.key}" ${checked}></td>`;
     }
 
     function refreshMemberNames() {
@@ -1053,25 +871,21 @@
     function checkWeek(weekIndex) {
       document.querySelectorAll(`input[data-week="${weekIndex}"]`).forEach(cb => cb.checked = true);
       clearResult();
-      saveToFirebaseDebounced();
     }
 
     function clearWeek(weekIndex) {
       document.querySelectorAll(`input[data-week="${weekIndex}"]`).forEach(cb => cb.checked = false);
       clearResult();
-      saveToFirebaseDebounced();
     }
 
     function checkAll() {
       document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => cb.checked = true);
       clearResult();
-      saveToFirebaseDebounced();
     }
 
     function clearChecks() {
       document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => cb.checked = false);
       clearResult();
-      saveToFirebaseDebounced();
     }
 
     function getAvailability() {
@@ -1123,7 +937,7 @@
             dateCountMap[dateInfo.key]++;
           }
 
-          if (member.assigned.length < member.targetCount) {
+          if (member.assigned.length < targetCount) {
             for (const dateInfo of sortedDates) {
               if (member.assigned.length >= member.targetCount) break;
               if (member.assigned.some(d => d.key === dateInfo.key)) continue;
@@ -1137,7 +951,6 @@
 
       renderResult(members, defaultTargetCount);
       showMessage('success', '자동 배정이 완료되었습니다. 아래 결과를 확인한 뒤 조원들에게 공유하세요.');
-      saveToFirebaseDebounced();
     }
 
     function getWeekIndexByKey(key) {
@@ -1274,6 +1087,19 @@
         return;
       }
       const state = JSON.parse(saved);
+      if (Array.isArray(state.members)) {
+        state.members = state.members.filter(name => name !== '권아연(2기)').slice(0, memberCount);
+      }
+      if (state.checks) {
+        const newChecks = {};
+        Object.keys(state.checks).forEach(key => {
+          const [memberIndex, ...dateParts] = key.split('-');
+          const idx = Number(memberIndex);
+          if (idx < 6) newChecks[key] = state.checks[key];
+          if (idx > 6 && idx < 10) newChecks[`${idx - 1}-${dateParts.join('-')}`] = state.checks[key];
+        });
+        state.checks = newChecks;
+      }
       document.getElementById('yearInput').value = state.year;
       document.getElementById('monthInput').value = state.month;
       document.getElementById('weeklyCountInput').value = state.weekly;
