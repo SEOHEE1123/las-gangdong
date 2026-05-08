@@ -57,6 +57,7 @@ input[type="checkbox"]:disabled:checked {
     }
 
     .hero {
+      position: relative;
       background: linear-gradient(135deg, #ffffff 0%, #eaf4ff 100%);
       border: 1px solid var(--line);
       border-radius: 32px;
@@ -65,7 +66,20 @@ input[type="checkbox"]:disabled:checked {
       box-shadow: var(--shadow);
     }
 
+    .creator-badge {
+      position: absolute;
+      top: 18px;
+      right: 24px;
+      color: #6c8096;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      opacity: 0.9;
+      white-space: nowrap;
+    }
+
     h1 {
+      padding-right: 120px;
       margin: 0 0 8px;
       font-size: 34px;
       letter-spacing: -0.04em;
@@ -499,7 +513,24 @@ input[type="checkbox"]:disabled:checked {
         margin-bottom: 12px;
       }
 
+      .creator-badge {
+        position: absolute;
+        top: 10px;
+        right: 12px;
+        width: auto;
+        margin-bottom: 0;
+        padding: 0;
+        font-size: 9px;
+        font-weight: 700;
+        color: #6c8096;
+        background: none;
+        border: none;
+        box-shadow: none;
+        white-space: nowrap;
+      }
+
       h1 {
+        padding-right: 74px;
         font-size: 23px;
         line-height: 1.25;
       }
@@ -709,6 +740,7 @@ input[type="checkbox"]:disabled:checked {
 <body>
   <div class="wrap">
     <section class="hero">
+      <div class="creator-badge">Created by 영크 1기 장서희</div>
       <h1>라스브러리 강동팀 근무표</h1>
       <p class="subtitle">주 4회 10:00~20:00 · 주 5회 10:00~18:00 · 12명 기준 · 월요일 시작 / 일요일 끝 주차 보기</p>
     </section>
