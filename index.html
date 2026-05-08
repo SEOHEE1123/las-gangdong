@@ -111,6 +111,7 @@ input[type="checkbox"]:disabled:checked {
     }
 
     .settings-grid { grid-template-columns: repeat(4, minmax(160px, 1fr)); }
+    .month-settings .memo-field { grid-column: span 2; }
     .name-grid { grid-template-columns: repeat(5, 1fr); }
     .member-type {
       margin-top: 6px;
@@ -531,6 +532,10 @@ input[type="checkbox"]:disabled:checked {
         gap: 8px;
       }
 
+      .month-settings .memo-field {
+        grid-column: auto;
+      }
+
       label {
         font-size: 12px;
         margin-bottom: 4px;
@@ -705,7 +710,7 @@ input[type="checkbox"]:disabled:checked {
         5월 마트휴무일은 기본 입력되어 있으며, 해당 날짜는 자동으로 잠금 처리됩니다.
       </div>
 
-      <div class="settings-grid">
+      <div class="settings-grid month-settings">
         <div>
           <label for="yearInput">연도</label>
           <input type="number" id="yearInput" min="2020" max="2100" />
@@ -727,10 +732,7 @@ input[type="checkbox"]:disabled:checked {
             <option value="12">12월</option>
           </select>
         </div>
-      </div>
-
-      <div class="settings-grid">
-        <div style="grid-column: span 2;">
+        <div class="memo-field">
           <label for="memoInput">추가 특이사항 / 추가 휴무</label>
           <input type="text" id="memoInput" value="5/10 마트휴무, 5/24 마트휴무" placeholder="예: 5/10 마트휴무, 5/24 행사" readonly />
         </div>
