@@ -752,8 +752,7 @@ input[type="checkbox"]:disabled:checked {
       <h2>3. 주차별 근무 가능 날짜 체크</h2>
       <div class="guide">
         각 주차가 <b>월요일 → 일요일</b> 순서로 표시됩니다. 팀원별로 근무 가능한 날짜를 체크하세요.<br>
-        <b>1일 최대 근무 인원은 기본 8명</b>입니다.<br>
-        <b>단, 마트 휴무일이 포함된 주차는 9명까지 체크 가능</b>합니다.<br>
+        <b>1일 최대 근무 인원은 9명</b>입니다.<br>
         <b>주말은 하루 최소 4명 이상 근무를 권장</b>합니다.<br>
         <b>5월 3주 차~5주 차 전체 기간 중, 팀원별 주말 근무가 최소 1회 이상 포함</b>되어야 합니다.<br>
         <b>2기 팀원은 5월 11일부터 체크 가능</b>합니다.<br>
@@ -1093,7 +1092,7 @@ applyPastDefaultChecks();
     }
 
     function getMaxWorkersForWeek(weekIndex) {
-      return hasMartClosingInWeek(weekIndex) ? 9 : 8;
+      return 9;
     }
 
     function getMaxWorkersForDate(dateKey) {
@@ -1102,7 +1101,7 @@ applyPastDefaultChecks();
           return getMaxWorkersForWeek(i);
         }
       }
-      return 8;
+      return 9;
     }
 
     function buildDateHeader(dateInfo, dayIndex, weekIndex) {
