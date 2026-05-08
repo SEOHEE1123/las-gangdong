@@ -488,9 +488,204 @@ input[type="checkbox"]:disabled:checked {
     }
 
     @media (max-width: 900px) {
-      .settings-grid, .name-grid { grid-template-columns: 1fr; }
-      .calendar { grid-template-columns: repeat(2, 1fr); }
-      h1 { font-size: 28px; }
+      .wrap {
+        padding: 16px 8px 44px;
+      }
+
+      .hero {
+        padding: 18px 16px;
+        border-radius: 22px;
+        margin-bottom: 12px;
+      }
+
+      h1 {
+        font-size: 23px;
+        line-height: 1.25;
+      }
+
+      .subtitle {
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      .card {
+        padding: 14px 10px;
+        border-radius: 18px;
+        margin-bottom: 12px;
+      }
+
+      .card h2 {
+        font-size: 17px;
+        margin-bottom: 10px;
+      }
+
+      .guide {
+        font-size: 12px;
+        padding: 10px 11px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+      }
+
+      .settings-grid, .name-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      label {
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+
+      input[type="text"], input[type="number"], select, textarea {
+        padding: 9px 10px;
+        font-size: 13px;
+        border-radius: 10px;
+      }
+
+      button {
+        padding: 9px 13px;
+        font-size: 12px;
+      }
+
+      .week-card {
+        border-radius: 16px;
+        margin-bottom: 12px;
+      }
+
+      .week-header {
+        padding: 11px 12px;
+      }
+
+      .week-title {
+        font-size: 15px;
+      }
+
+      .week-range {
+        font-size: 11px;
+      }
+
+      .week-table-wrap {
+        padding: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      table {
+        table-layout: fixed;
+        min-width: 560px;
+        border-radius: 12px;
+      }
+
+      th, td {
+        min-width: 52px;
+        width: 52px;
+        padding: 5px 4px;
+        font-size: 10.5px;
+      }
+
+      .member-col {
+        min-width: 84px;
+        width: 84px;
+        max-width: 84px;
+        font-size: 10.5px;
+        padding-left: 4px;
+        padding-right: 4px;
+        word-break: keep-all;
+        white-space: normal;
+      }
+
+      .date-head {
+        min-width: 52px;
+        width: 52px;
+      }
+
+      .date-num {
+        font-size: 10.5px;
+      }
+
+      .daily-count {
+        font-size: 10px;
+        margin-top: 2px;
+      }
+
+      .holiday-note, .mart-note {
+        font-size: 9px;
+        white-space: normal;
+      }
+
+      input[type="checkbox"] {
+        width: 15px;
+        height: 15px;
+      }
+
+      input[type="checkbox"]:disabled:checked {
+        transform: scale(1.05);
+        box-shadow: 0 0 0 2px #2563eb;
+      }
+
+      .divider-row td,
+      .divider-row .member-col {
+        border-top-width: 3px !important;
+      }
+
+      .calendar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 430px) {
+      .wrap {
+        padding-left: 6px;
+        padding-right: 6px;
+      }
+
+      .hero {
+        padding: 16px 14px;
+      }
+
+      h1 {
+        font-size: 21px;
+      }
+
+      .card {
+        padding: 12px 8px;
+      }
+
+      .week-table-wrap {
+        padding: 6px;
+      }
+
+      table {
+        min-width: 520px;
+      }
+
+      th, td {
+        min-width: 48px;
+        width: 48px;
+        padding: 4px 3px;
+        font-size: 10px;
+      }
+
+      .member-col {
+        min-width: 78px;
+        width: 78px;
+        max-width: 78px;
+        font-size: 10px;
+      }
+
+      .date-head {
+        min-width: 48px;
+        width: 48px;
+      }
+
+      .date-num {
+        font-size: 10px;
+      }
+
+      input[type="checkbox"] {
+        width: 14px;
+        height: 14px;
+      }
     }
   </style>
 </head>
@@ -498,15 +693,16 @@ input[type="checkbox"]:disabled:checked {
   <div class="wrap">
     <section class="hero">
       <h1>라스브러리 강동팀 근무표</h1>
-      <p class="subtitle">주 4회 10:00~20:00 · 주 5회 10:00~18:00 · 9명 기준 · 월요일 시작 / 일요일 끝 주차 보기</p>
+      <p class="subtitle">주 4회 10:00~20:00 · 주 5회 10:00~18:00 · 12명 기준 · 월요일 시작 / 일요일 끝 주차 보기</p>
     </section>
 
     <section class="card no-print">
       <h2>1. 근무 월 설정</h2>
       <div class="guide">
-        연도와 월을 선택한 뒤 <b>근무 체크표 만들기</b>를 누르세요. 한 주가 <b>월요일부터 일요일까지</b> 보이도록 자동 정리됩니다.<br><br>
-        대한민국 공휴일(신정, 삼일절, 어린이날, 현충일, 광복절, 개천절, 한글날, 성탄절)은 자동 표시됩니다.<br>
-        설날·추석·대체공휴일·마트휴무 같은 추가 일정만 직접 입력하면 됩니다.
+        현재 5월 근무 체크표가 자동으로 표시됩니다.<br>
+        팀원들은 본인 이름 줄에서 근무 가능한 날짜만 체크해 주세요.<br><br>
+        한 주는 <b>월요일부터 일요일까지</b> 보이도록 자동 정리됩니다.<br>
+        5월 마트휴무일은 기본 입력되어 있으며, 해당 날짜는 자동으로 잠금 처리됩니다.
       </div>
 
       <div class="settings-grid">
@@ -531,31 +727,12 @@ input[type="checkbox"]:disabled:checked {
             <option value="12">12월</option>
           </select>
         </div>
-        <div>
-          <label for="weeklyCountInput">기본 주 근무 횟수</label>
-          <select id="weeklyCountInput" onchange="updateDefaultWorkType()">
-            <option value="4">주 4회</option>
-            <option value="5">주 5회</option>
-          </select>
-        </div>
-        <div>
-          <label for="targetCountInput">기본 월 목표 근무일</label>
-          <input type="number" id="targetCountInput" min="1" max="31" value="16" />
-        </div>
       </div>
 
       <div class="settings-grid">
         <div style="grid-column: span 2;">
           <label for="memoInput">추가 특이사항 / 추가 휴무</label>
-          <input type="text" id="memoInput" placeholder="예: 6/9 마트휴무, 6/23 행사" />
-        </div>
-        <div>
-          <label for="workTimeInput">기본 근무 시간</label>
-          <input type="text" id="workTimeInput" value="10:00~20:00" />
-        </div>
-        <div>
-          <label for="workersPerDayInput">최종표 하루 근무자 칸</label>
-          <input type="number" id="workersPerDayInput" min="1" max="10" value="5" />
+          <input type="text" id="memoInput" value="5/10 마트휴무, 5/24 마트휴무" placeholder="예: 5/10 마트휴무, 5/24 행사" readonly />
         </div>
       </div>
 
@@ -573,24 +750,23 @@ input[type="checkbox"]:disabled:checked {
       <h2>3. 주차별 근무 가능 날짜 체크</h2>
       <div class="guide">
         각 주차가 <b>월요일 → 일요일</b> 순서로 표시됩니다. 팀원별로 근무 가능한 날짜를 체크하세요.<br>
-        <b>1일 최대 근무 인원은 6명</b>입니다.<br>
-        <b>오늘 이전 날짜</b>와 <b>마트 휴무일</b>은 자동으로 잠금 처리되어 체크를 수정할 수 없습니다.
+        <b>1일 최대 근무 인원은 기본 8명</b>입니다.<br>
+        <b>단, 마트 휴무일이 포함된 주차는 9명까지 체크 가능</b>합니다.<br>
+        <b>주말은 하루 최소 4명 이상 근무를 권장</b>합니다.<br>
+        <b>5월 3주 차~5주 차 전체 기간 중, 팀원별 주말 근무가 최소 1회 이상 포함</b>되어야 합니다.<br>
+        <b>오늘 이전 날짜</b>와 <b>마트 휴무일</b>은 자동으로 잠금 처리되어 수정할 수 없습니다.
   </div>
       
       <div id="weekContainer"></div>
-      <div class="toolbar no-print">
-        <button class="secondary" onclick="checkAll()">전체 체크</button>
-        <button class="secondary" onclick="clearChecks()">체크 지우기</button>
-      </div>
     </section>
 
   </div>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwyNXWS_KmYe7i9b3L0lQGxEw55qbxf1BM_ax9dn-KDVB5eEGUm0qIlVKzJ1jL78OM9/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwvLaqtK_-y8Sq_r46yLHkYbSqPN4xqkExat-AZrLtK8un2qs9KkYWWjzn6zeQziZ8V/exec';
     
     const weekdays = ['월', '화', '수', '목', '금', '토', '일'];
-    const memberCount = 9;
+    const memberCount = 12;
     let monthDates = [];
     let calendarWeeks = [];
 
@@ -682,7 +858,10 @@ input[type="checkbox"]:disabled:checked {
     '박서윤(1기)',
     '양창희(2기)',
     '권은서(2기)',
-    '김정우(2기)'
+    '김정우(2기)',
+    '김지현(2기)',
+    '김윤아(2기)',
+    '윤정석(2기)'
   ];
 
   const grid = document.getElementById('nameGrid');
@@ -722,35 +901,13 @@ input[type="checkbox"]:disabled:checked {
       });
     }
 
-    function getMemberTypes() {
-      return Array.from({ length: memberCount }, (_, i) => {
-        const select = document.getElementById(`type-${i}`);
-        const type = select ? select.value : '4';
-        return {
-          type,
-          weeklyCount: type === '5' ? 5 : 4,
-          workTime: type === '5' ? '10:00~18:00' : '10:00~20:00'
-        };
-      });
-    }
-
-    function getWeeksCount() {
-      monthDates = buildMonthDates();
-      calendarWeeks = buildCalendarWeeks(monthDates);
-      return calendarWeeks.length || 4;
-    }
-
-    function updateDefaultWorkType() {
-      const weekly = Number(document.getElementById('weeklyCountInput').value) || 4;
-      document.getElementById('workTimeInput').value = weekly === 5 ? '10:00~18:00' : '10:00~20:00';
-    }
-
     function getKoreanHolidayMap(year) {
       const holidays = {
         [`${year}-01-01`]: '신정',
         [`${year}-03-01`]: '삼일절',
         [`${year}-05-05`]: '어린이날',
         [`${year}-06-06`]: '현충일',
+        [`${year}-07-17`]: '제헌절',
         [`${year}-08-15`]: '광복절',
         [`${year}-10-03`]: '개천절',
         [`${year}-10-09`]: '한글날',
@@ -765,6 +922,7 @@ input[type="checkbox"]:disabled:checked {
         '2026-05-05': '어린이날',
         '2026-05-24': '부처님오신날',
         '2026-05-25': '대체공휴일',
+        '2026-06-03': '전국동시지방선거',
         '2026-08-17': '대체공휴일',
         '2026-09-24': '추석 연휴',
         '2026-09-25': '추석',
@@ -905,7 +1063,7 @@ input[type="checkbox"]:disabled:checked {
               <thead>
                 <tr>
                   <th class="member-col">팀원명</th>
-                  ${week.map((dateInfo, dayIndex) => buildDateHeader(dateInfo, dayIndex)).join('')}
+                  ${week.map((dateInfo, dayIndex) => buildDateHeader(dateInfo, dayIndex, weekIndex)).join('')}
                 </tr>
               </thead>
               <tbody>
@@ -926,7 +1084,25 @@ input[type="checkbox"]:disabled:checked {
 applyPastDefaultChecks();
 }
 
-    function buildDateHeader(dateInfo, dayIndex) {
+    function hasMartClosingInWeek(weekIndex) {
+      const week = calendarWeeks[weekIndex] || [];
+      return week.some(dateInfo => dateInfo && dateInfo.memo && dateInfo.memo.includes('마트'));
+    }
+
+    function getMaxWorkersForWeek(weekIndex) {
+      return hasMartClosingInWeek(weekIndex) ? 9 : 8;
+    }
+
+    function getMaxWorkersForDate(dateKey) {
+      for (let i = 0; i < calendarWeeks.length; i++) {
+        if ((calendarWeeks[i] || []).some(dateInfo => dateInfo && dateInfo.key === dateKey)) {
+          return getMaxWorkersForWeek(i);
+        }
+      }
+      return 8;
+    }
+
+    function buildDateHeader(dateInfo, dayIndex, weekIndex) {
       const dayClass = dayIndex === 6 ? 'sunday' : dayIndex === 5 ? 'saturday' : '';
       if (!dateInfo) {
         return `<th class="date-head empty-date"><span class="date-num">-</span></th>`;
@@ -940,7 +1116,7 @@ applyPastDefaultChecks();
           <span class="date-num ${specialClass}">${dateInfo.month}/${dateInfo.day}(${dateInfo.weekday})</span>
           ${dateInfo.memo ? `<span class="${memoClass}">${dateInfo.memo}</span>` : ''}
 
-          <div class="daily-count" data-date="${dateInfo.key}">0/6</div>
+          <div class="daily-count" data-date="${dateInfo.key}">0/${getMaxWorkersForWeek(weekIndex)}</div>
         </th>
       `;
     }
@@ -1031,7 +1207,7 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
     );
 
     if (countElement) {
-      countElement.innerText = `${checkedCount}/6`;
+      countElement.innerText = `${checkedCount}/${getMaxWorkersForDate(dateKey)}`;
     }
   });
 }
@@ -1050,8 +1226,10 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
     if (cb.checked) checkedCount++;
   });
 
-  // 6명 초과 방지
-  if (checked && checkedCount > 6) {
+  const maxWorkers = getMaxWorkersForDate(dateKey);
+
+  // 날짜별 최대 인원 초과 방지
+  if (checked && checkedCount > maxWorkers) {
     const currentCheckbox = document.querySelector(
       `input[data-member="${memberIndex}"][data-date="${dateKey}"]`
     );
@@ -1062,7 +1240,7 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
 
     updateDailyCounts();
     
-    alert('하루 최대 근무 인원은 6명까지입니다.');
+    alert(`이 날짜의 하루 최대 근무 인원은 ${maxWorkers}명까지입니다.`);
     return;
   }
 
@@ -1082,180 +1260,6 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
   }
 }
 
-
-    function checkAll() {
-      document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => { if (!cb.disabled) cb.checked = true; });
-      clearResult();
-    }
-
-    function clearChecks() {
-      document.querySelectorAll('input[type="checkbox"][data-date]').forEach(cb => { if (!cb.disabled) cb.checked = false; });
-      clearResult();
-    }
-
-    function getAvailability() {
-      const members = getMembers();
-      return members.map((name, memberIndex) => {
-        const available = monthDates.filter(dateInfo => {
-          const cb = document.querySelector(`input[data-member="${memberIndex}"][data-date="${dateInfo.key}"]`);
-          return cb && cb.checked;
-        });
-        const typeInfo = getMemberTypes()[memberIndex];
-        return { name, memberIndex, available, assigned: [], ...typeInfo, targetCount: typeInfo.weeklyCount * getWeeksCount() };
-      });
-    }
-
-    function autoAssign() {
-      const defaultTargetCount = Number(document.getElementById('targetCountInput').value) || 16;
-      const defaultWeeklyLimit = Number(document.getElementById('weeklyCountInput').value) || 4;
-      const members = getAvailability();
-      const errors = [];
-
-      members.forEach(member => {
-        if (member.available.length < member.targetCount) {
-          errors.push(`${member.name}: 가능한 날짜 ${member.available.length}개 / 목표 ${member.targetCount}개 (${member.weeklyCount}회 근무형)`);
-        }
-      });
-
-      if (errors.length) {
-        showMessage('warning', '목표 근무일을 채우기 어려운 팀원이 있습니다.\n' + errors.join('\n'));
-        return;
-      }
-
-      const dateCountMap = {};
-      monthDates.forEach(d => dateCountMap[d.key] = 0);
-
-      members
-        .sort((a, b) => a.available.length - b.available.length)
-        .forEach(member => {
-          const weekCount = {};
-          const sortedDates = member.available
-            .map(d => ({ ...d, count: dateCountMap[d.key], week: getWeekIndexByKey(d.key) }))
-            .sort((a, b) => a.week - b.week || a.count - b.count || a.day - b.day);
-
-          for (const dateInfo of sortedDates) {
-            if (member.assigned.length >= member.targetCount) break;
-            weekCount[dateInfo.week] = weekCount[dateInfo.week] || 0;
-            if (weekCount[dateInfo.week] >= member.weeklyCount) continue;
-            member.assigned.push(dateInfo);
-            weekCount[dateInfo.week]++;
-            dateCountMap[dateInfo.key]++;
-          }
-
-          if (member.assigned.length < targetCount) {
-            for (const dateInfo of sortedDates) {
-              if (member.assigned.length >= member.targetCount) break;
-              if (member.assigned.some(d => d.key === dateInfo.key)) continue;
-              member.assigned.push(dateInfo);
-              dateCountMap[dateInfo.key]++;
-            }
-          }
-
-          member.assigned.sort((a, b) => a.key.localeCompare(b.key));
-        });
-
-      renderResult(members, defaultTargetCount);
-      showMessage('success', '자동 배정이 완료되었습니다. 아래 결과를 확인한 뒤 조원들에게 공유하세요.');
-    }
-
-    function getWeekIndexByKey(key) {
-      for (let i = 0; i < calendarWeeks.length; i++) {
-        if (calendarWeeks[i].some(d => d && d.key === key)) return i;
-      }
-      return 0;
-    }
-
-    function renderResult(members, targetCount) {
-      const resultBox = document.getElementById('resultBox');
-      const year = Number(document.getElementById('yearInput').value);
-      const month = Number(document.getElementById('monthInput').value);
-      const workTime = document.getElementById('workTimeInput').value || '10:00~20:00';
-      const dateMap = {};
-      monthDates.forEach(d => dateMap[d.key] = []);
-
-      members.forEach(member => {
-        member.assigned.forEach(dateInfo => dateMap[dateInfo.key].push(member.name));
-      });
-
-      const firstWeekday = (new Date(year, month - 1, 1).getDay() + 6) % 7;
-      const lastDay = new Date(year, month, 0).getDate();
-      const calendarCells = [];
-      for (let i = 0; i < firstWeekday; i++) calendarCells.push(null);
-      monthDates.forEach(d => calendarCells.push(d));
-      while (calendarCells.length % 7 !== 0) calendarCells.push(null);
-
-      const calendarHtml = `
-        <div class="calendar">
-          ${weekdays.map((w, i) => `<div class="calendar-head ${i === 6 ? 'sunday' : i === 5 ? 'saturday' : ''}">${w}</div>`).join('')}
-          ${calendarCells.map(dateInfo => {
-            if (!dateInfo) return '<div class="date-box empty"></div>';
-            const memoClass = dateInfo.memo.includes('마트') ? 'mart-note' : dateInfo.memo ? 'holiday-note' : '';
-            return `
-              <div class="date-box">
-                <div class="date-title">${dateInfo.month}/${dateInfo.day} (${dateInfo.weekday}) ${dateInfo.memo ? `<span class="${memoClass}">${dateInfo.memo}</span>` : ''}</div>
-                ${dateMap[dateInfo.key].length ? dateMap[dateInfo.key].map(name => `<span class="chip">${name}</span>`).join('') : '<span class="small">배정 없음</span>'}
-              </div>
-            `;
-          }).join('')}
-        </div>
-      `;
-
-      const summaryHtml = `
-        <table class="summary-table">
-          <thead>
-            <tr>
-              <th>팀원명</th>
-              <th>근무 유형</th>
-              <th>근무 시간</th>
-              <th>근무 날짜</th>
-              <th>근무 횟수</th>
-              <th>상태</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${members.sort((a, b) => a.memberIndex - b.memberIndex).map(member => {
-              const count = member.assigned.length;
-              const memberTarget = member.targetCount || targetCount;
-              const status = count === memberTarget ? '정상' : count < memberTarget ? '부족' : '초과';
-              return `
-                <tr>
-                  <td>${member.name}</td>
-                  <td>주 ${member.weeklyCount}회</td>
-                  <td>${member.workTime}</td>
-                  <td>${member.assigned.map(d => `${d.month}/${d.day}(${d.weekday})`).join(', ')}</td>
-                  <td>${count}회 / 목표 ${memberTarget}회</td>
-                  <td>${status}</td>
-                </tr>
-              `;
-            }).join('')}
-          </tbody>
-        </table>
-      `;
-
-      resultBox.innerHTML = `<h3>${year}년 ${month}월 달력형 근무표</h3>${calendarHtml}<h3>팀원별 근무 요약</h3>${summaryHtml}`;
-      buildShareText(members, year, month, workTime, targetCount);
-    }
-
-    function buildShareText(members, year, month, workTime, targetCount) {
-      let text = `강동팀 ${year}년 ${month}월 근무 계획표 공유드립니다.
-`;
-      text += `근무유형: 주 4회 10:00~20:00 / 주 5회 10:00~18:00
-
-`;
-
-      members.sort((a, b) => a.memberIndex - b.memberIndex).forEach(member => {
-        text += `${member.name} [주 ${member.weeklyCount}회 / ${member.workTime}]: ${member.assigned.map(d => `${d.month}/${d.day}(${d.weekday})`).join(', ') || '배정 없음'} / 총 ${member.assigned.length}회`;
-        if (member.assigned.length !== member.targetCount) text += ` ※ 목표 ${member.targetCount}회와 다름`;
-        text += '\n';
-      });
-
-      text += '\n확인 후 수정이 필요한 부분 있으면 말씀 부탁드립니다.';
-      document.getElementById('shareText').value = text;
-    }
-
-    function showMessage(type, text) {
-      document.getElementById('messageBox').innerHTML = `<div class="message ${type}">${text}</div>`;
-    }
 
     function clearResult() {
       updateDailyCounts();
