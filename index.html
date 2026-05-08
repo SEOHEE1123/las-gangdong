@@ -754,7 +754,8 @@ input[type="checkbox"]:disabled:checked {
         <b>단, 마트 휴무일이 포함된 주차는 9명까지 체크 가능</b>합니다.<br>
         <b>주말은 하루 최소 4명 이상 근무를 권장</b>합니다.<br>
         <b>5월 3주 차~5주 차 전체 기간 중, 팀원별 주말 근무가 최소 1회 이상 포함</b>되어야 합니다.<br>
-        <b>오늘 이전 날짜</b>와 <b>마트 휴무일</b>은 자동으로 잠금 처리되어 수정할 수 없습니다.
+        <b>2기 팀원은 5월 11일부터 체크 가능</b>합니다.<br>
+        <b>오늘 이전 날짜</b>, <b>마트 휴무일</b>, <b>2기 시작 전 날짜</b>는 자동으로 잠금 처리되어 체크를 수정할 수 없습니다.
   </div>
       
       <div id="weekContainer"></div>
@@ -806,6 +807,7 @@ input[type="checkbox"]:disabled:checked {
       );
 
       if (checkbox) {
+        if (checkbox.dataset.lockReason === 'second-gen-before-start') return;
         checkbox.checked = true;
       }
     });
@@ -842,6 +844,7 @@ input[type="checkbox"]:disabled:checked {
       );
 
       if (checkbox) {
+        if (checkbox.dataset.lockReason === 'second-gen-before-start') return;
         checkbox.checked = true;
       }
     });
@@ -907,7 +910,6 @@ input[type="checkbox"]:disabled:checked {
         [`${year}-03-01`]: '삼일절',
         [`${year}-05-05`]: '어린이날',
         [`${year}-06-06`]: '현충일',
-        [`${year}-07-17`]: '제헌절',
         [`${year}-08-15`]: '광복절',
         [`${year}-10-03`]: '개천절',
         [`${year}-10-09`]: '한글날',
@@ -922,7 +924,6 @@ input[type="checkbox"]:disabled:checked {
         '2026-05-05': '어린이날',
         '2026-05-24': '부처님오신날',
         '2026-05-25': '대체공휴일',
-        '2026-06-03': '전국동시지방선거',
         '2026-08-17': '대체공휴일',
         '2026-09-24': '추석 연휴',
         '2026-09-25': '추석',
@@ -1165,6 +1166,13 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
   const isPast = cellDate < today;
   const isMartClosed = dateInfo.memo && dateInfo.memo.includes('마트');
 
+  // 2기 팀원은 2026년 5월 11일부터 체크 가능
+  const isSecondGen = memberIndex >= 6;
+  const secondGenStartDate = new Date(2026, 4, 11);
+  secondGenStartDate.setHours(0, 0, 0, 0);
+  const isBeforeSecondGenStart = isSecondGen && cellDate < secondGenStartDate;
+  const lockReason = isBeforeSecondGenStart ? 'second-gen-before-start' : '';
+
   return `
     <td class="${memoCellClass}">
       <input
@@ -1172,8 +1180,9 @@ function buildCheckCell(dateInfo, weekIndex, dayIndex, memberIndex, oldChecks, k
   data-week="${weekIndex}"
   data-member="${memberIndex}"
   data-date="${dateInfo.key}"
+  data-lock-reason="${lockReason}"
   ${checked}
-  ${isPast || isMartClosed ? 'disabled' : ''}
+  ${isPast || isMartClosed || isBeforeSecondGenStart ? 'disabled' : ''}
   onchange="saveCheckToSheet(${memberIndex}, '${dateInfo.key}', this.checked)"
 >
     </td>
